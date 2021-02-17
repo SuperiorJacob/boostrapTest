@@ -165,6 +165,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Highscores.cpp" />
     <ClCompile Include="Pachinko.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PhysicsProjectApp.cpp" />
@@ -177,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Highscores.h" />
     <ClInclude Include="Pachinko.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PhysicsProjectApp.h" />

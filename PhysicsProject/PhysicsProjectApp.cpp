@@ -8,6 +8,7 @@
 #include "Input.h"
 #include "glm\ext.hpp"
 #include "Pachinko.h"
+#include "Highscores.h"
 #include <Gizmos.h>
 #include <string>
 
@@ -21,7 +22,13 @@ PhysicsProjectApp::~PhysicsProjectApp()
 }
 
 bool PhysicsProjectApp::startup() {
-	
+
+	// HS
+	m_highscores = new Highscores();
+	m_highscores->SetGameName("JacobsGame");
+	m_highscores->Load();
+	//
+
 	// Increases 2D line coun to maximise the number of objects we can draw.
 	aie::Gizmos::create(255U, 255U, 65535U, 65535U);
 
@@ -188,8 +195,6 @@ void PhysicsProjectApp::draw() {
 	// wipe the screen to the background colour
 	clearScreen();
 
-
-
 	// begin drawing sprites
 	m_2dRenderer->begin();
 
@@ -212,6 +217,8 @@ void PhysicsProjectApp::draw() {
 
 	// output some text, uses the last used colour
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
+
+	m_highscores->Draw(m_font, m_2dRenderer, 0, 720 - 160);
 
 	// done drawing sprites
 	m_2dRenderer->end();

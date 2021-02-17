@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Renderer2D.h"
 #include "Pachinko.h"
+#include "Highscores.h"
 #include "PhysicsScene.h"
 
 class PhysicsProjectApp : public aie::Application {
@@ -36,4 +37,5 @@ protected:
 
 	// Pachinko
 	Pachinko* m_pachinko = nullptr;
+	Highscores* m_highscores = nullptr;
 };
