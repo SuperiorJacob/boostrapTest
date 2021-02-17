@@ -30,6 +30,8 @@ std::vector<std::string> get_filenames(std::experimental::filesystem::path path)
 
 void Highscores::Load()
 {
+	m_user = GetUser();
+
 	for (const auto& name : get_filenames(m_dir + m_gameName))
 	{
 		std::ifstream hs;
@@ -57,8 +59,13 @@ void Highscores::Draw(aie::Font* font, aie::Renderer2D* render, int x, int y)
 {
 	render->drawText(font, "HIGHSCORES:", x, y);
 
-	std::string first = "(1) " + m_highscores.begin()->first + ": " + std::to_string(m_highscores.begin()->second);
-	render->drawText(font, first.c_str(), x, y - 34);
+	int spot = 0;
+	for (auto score : SortScores())
+	{
+		spot++;
+		std::string first = "(" + std::to_string(spot) + ") " + score.first + ": " + std::to_string(score.second);
+		render->drawText(font, first.c_str(), x, y - 34 * spot);
+	}
 }
 
 Highscores::HMap Highscores::GetHighScores()
@@ -68,7 +75,7 @@ Highscores::HMap Highscores::GetHighScores()
 
 bool Highscores::CheckIfHighScore(int a_highscore)
 {
-	return false;
+	return CheckIfHighScore(GetUser(), a_highscore);
 }
 
 bool Highscores::CheckIfHighScore(std::string a_name, int a_highscore)
@@ -101,6 +108,14 @@ void Highscores::AddHighScore(std::string a_name, int a_highscore)
 {
 	if (!CheckIfHighScore(a_name, a_highscore)) return;
 
+	const char* name = a_name.c_str();
+	auto search = m_highscores.find(name);
+
+	if (search != m_highscores.end())
+	{
+		search->second = a_highscore;
+	}
+
 	CreateProfile(m_gameName, a_name, a_highscore);
 }
 
@@ -125,8 +140,39 @@ void Highscores::CreateProfile(std::string a_game, std::string a_name, int a_hig
 	myfile.close();
 }
 
+bool cmp(std::pair<std::string, int>& a,
+	std::pair<std::string, int>& b)
+{
+	return a.second > b.second;
+}
+
+std::vector<std::pair<std::string, int> > Highscores::SortScores()
+{
+	std::vector<std::pair<std::string, int> > A;
+
+	// Copy key-value pair from Map 
+	// to vector of pairs 
+	for (auto& it : m_highscores) {
+		A.push_back(it);
+	}
+
+	// Sort using comparator function 
+	sort(A.begin(), A.end(), cmp);
+
+	// Print the sorted value 
+	for (auto& it : A) {
+
+		std::cout << it.first << ' '
+			<< it.second << std::endl;
+	}
+
+	return A;
+}
+
 std::string Highscores::GetUser()
 {
+	if (m_user != "ERROR" && m_user != "") return m_user;
+
 	TCHAR username[100];
 	DWORD username_len = sizeof(username);
 	GetUserName(username, &username_len);

@@ -124,6 +124,7 @@ bool PhysicsProjectApp::startup() {
 			if (other->GetTag() != "Static")
 			{
 				m_pachinko->AddScore(score);
+				m_highscores->AddHighScore(m_pachinko->GetScore());
 
 				Rigidbody* box = dynamic_cast<Rigidbody*>(other);
 

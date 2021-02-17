@@ -44,8 +44,7 @@ void Pachinko::Start(float a_timer)
 
 void Pachinko::Update(float deltaTime)
 {
-	m_timer -= 1;
-
+	m_timer -= 1 * deltaTime;
 	glm::vec2 ballPos = m_ballDropper->GetPosition();
 
 	m_ballDropper->SetPosition(glm::vec2(ballPos.x + (left ? -m_dropperSpeed : m_dropperSpeed) * deltaTime, ballPos.y));
@@ -57,7 +56,7 @@ void Pachinko::Update(float deltaTime)
 
 	if (m_nextBallSpawn >= m_timer && input->isKeyDown(aie::EInputCodes::INPUT_KEY_SPACE) && m_ballsLeft > 0)
 	{
-		m_nextBallSpawn = m_timer - 5.f;
+		m_nextBallSpawn = m_timer - 5.f * deltaTime;
 		m_ballsLeft -= 1;
 
 		Sphere* sphere = new Sphere(m_ballDropper->GetPosition() + glm::vec2(0, -2), glm::vec2(0, 0), 10.0f, 1, glm::vec4(0, 1, 0, 1));

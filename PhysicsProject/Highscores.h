@@ -3,6 +3,7 @@
 #include <Renderer2D.h>
 #include <map>
 #include <string>
+#include <vector>
 
 class Highscores
 {
@@ -25,10 +26,14 @@ public:
 
 	void SetGameName(std::string a_game) { m_gameName = a_game; }
 
+	std::vector<std::pair<std::string, int>> Highscores::SortScores();
+
 	std::string GetUser();
 
 protected:
 	HMap m_highscores;
+	
+	std::string m_user = "ERROR";
 
 	std::string m_gameName = "ERROR";
 
