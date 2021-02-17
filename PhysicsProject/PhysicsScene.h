@@ -14,6 +14,7 @@ public:
 
 	void AddActor(PhysicsObject* a_actor);
 	void RemoveActor(PhysicsObject* a_actor);
+	std::vector<PhysicsObject*> GetActors();
 
 	// This will call the update of each PhysicsObject and updates internally.
 	// This will handle collision detection and resolution

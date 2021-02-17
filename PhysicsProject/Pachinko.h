@@ -23,6 +23,9 @@ public:
 	void SetMap(std::vector<PhysicsObject*> a_map) { m_map = a_map; }
 	std::vector<PhysicsObject*> GetMap() { return m_map; }
 
+	int GetBallsLeft() { return m_ballsLeft; }
+	void SetBallsLeft(int a_ballsLeft) { m_ballsLeft = a_ballsLeft; }
+
 protected:
 	int m_score = 0;
 
@@ -35,6 +38,8 @@ protected:
 	bool m_started = false;
 
 	Box* m_ballDropper;
+
+	int m_ballsLeft = 100;
 
 	std::vector<PhysicsObject*> m_balls;
 	std::vector<PhysicsObject*> m_map;

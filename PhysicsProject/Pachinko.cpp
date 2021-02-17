@@ -37,6 +37,8 @@ void Pachinko::Start(float a_timer)
 
 	m_physicsScene->AddActor(m_ballDropper);
 
+	m_ballsLeft = 100;
+
 	m_started = true;
 }
 
@@ -53,9 +55,10 @@ void Pachinko::Update(float deltaTime)
 
 	aie::Input* input = aie::Input::getInstance();
 
-	if (m_nextBallSpawn >= m_timer && input->isKeyDown(aie::EInputCodes::INPUT_KEY_SPACE))
+	if (m_nextBallSpawn >= m_timer && input->isKeyDown(aie::EInputCodes::INPUT_KEY_SPACE) && m_ballsLeft > 0)
 	{
 		m_nextBallSpawn = m_timer - 5.f;
+		m_ballsLeft -= 1;
 
 		Sphere* sphere = new Sphere(m_ballDropper->GetPosition() + glm::vec2(0, -2), glm::vec2(0, 0), 10.0f, 1, glm::vec4(0, 1, 0, 1));
 		sphere->SetElasticity(1.f);

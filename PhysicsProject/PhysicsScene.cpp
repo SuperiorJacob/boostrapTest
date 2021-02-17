@@ -47,6 +47,11 @@ void PhysicsScene::RemoveActor(PhysicsObject* a_actor)
 	}
 }
 
+std::vector<PhysicsObject*> PhysicsScene::GetActors()
+{
+	return m_actors;
+}
+
 void PhysicsScene::Update(float dt)
 {
 	static std::list<PhysicsObject*> dirty; // MUST REMOVE

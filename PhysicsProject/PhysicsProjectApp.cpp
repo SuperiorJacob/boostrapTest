@@ -9,6 +9,7 @@
 #include "glm\ext.hpp"
 #include "Pachinko.h"
 #include <Gizmos.h>
+#include <string>
 
 PhysicsProjectApp::PhysicsProjectApp()
 {
@@ -48,34 +49,80 @@ bool PhysicsProjectApp::startup() {
 	};
 
 	bool spacing = false;
-	for (int y = 0; y < 8; y++)
-	{
-		spacing = (y % 2 == 0);
 
-		for (int x = -4; x < 5; x++)
+	Sphere* balls[9][8];
+
+	for (int x = -4; x < 5; x++)
+	{
+
+		for (int y = 0; y < 8; y++)
 		{
+			spacing = (y % 2 == 0);
 			int mix = rand() % 5;
+
+			// Default
 
 			Sphere* ball = new Sphere(glm::vec2((spacing ? 2.5 : -2.5) + (-x * 10), 40 - y * 10), glm::vec2(0), (mix == 1) ? 100.0f : 3.0f, 1.f, (mix == 1) ? glm::vec4(1, 1, 0.5, 1) : glm::vec4(1, 1, 1, 1));
 			ball->SetElasticity((mix == 1) ? 0.1f : 1.f);
+			ball->SetTag("Static");
 
 			pachinko_map.push_back(ball);
+
+			// Spring
+
+			//Sphere* ball = new Sphere(glm::vec2((spacing ? 2.5 : -2.5) + (-x * 10), 40 - y * 10), glm::vec2(0), 1.f, 1.f, (mix == 1) ? glm::vec4(1, 1, 0.5, 1) : glm::vec4(1, 1, 1, 1));
+			//ball->SetElasticity((mix == 1) ? 0.1f : 1.f);
+			//ball->SetTag("Static");
+
+			//if (y == 0)
+			//{
+			//	ball->SetKinematic(true);
+			//}
+
+			//m_physicsScene->AddActor(ball);
+
+			//int xPos = x + 4;
+
+			//balls[xPos][y] = ball;
+
+			//if (((xPos - 1) >= 0) && ((y) >= 0) && balls[xPos - 1][y])
+			//{
+			//	m_physicsScene->AddActor(new Spring(ball, balls[xPos - 1][y], 10, 500));
+			//}
+
+			//if (((xPos) >= 0) && ((y - 1) >= 0) && balls[xPos][y - 1])
+			//{
+			//	m_physicsScene->AddActor(new Spring(ball, balls[xPos][y - 1], 10, 500));
+			//}
+
+			//if (((xPos - 1) >= 0) && ((y - 1) >= 0) && balls[xPos - 1][y - 1])
+			//{
+			//	m_physicsScene->AddActor(new Spring(ball, balls[xPos - 1][y - 1], 10, 500));
+			//}
 		}
+
 	}
 
 	for (int x = -4; x < 5; x++)
 	{
+		int score = (5 - std::abs(x)) * 10;
+
 		Box* pointBox = new Box(glm::vec2(-x * 10, -50), glm::vec2(0, 0), 0.f, 1.0f, 4.5f, 5.f, glm::vec4(1.2f - std::abs(x)/4.f, 0, 0, 1));
 		pointBox->SetKinematic(true);
 		pointBox->SetTrigger(true);
 
+		pointBox->SetTag(std::to_string(score));
+
 		pointBox->triggerEnter = [=](PhysicsObject* other) { 
-			m_pachinko->AddScore(5 - std::abs(x));
+			if (other->GetTag() != "Static")
+			{
+				m_pachinko->AddScore(score);
 
-			Rigidbody* ball = dynamic_cast<Rigidbody*>(other);
+				Rigidbody* box = dynamic_cast<Rigidbody*>(other);
 
-			if (ball != nullptr)
-				ball->SetPosition(glm::vec2(0, -100));
+				if (box != nullptr)
+					box->SetPosition(glm::vec2(0, -100));
+			}
 		};
 
 		pachinko_map.push_back(pointBox);
@@ -91,10 +138,10 @@ bool PhysicsProjectApp::startup() {
 
 	pachinko_map.push_back(boxe1);
 
-	Box* boxe2 = new Box(glm::vec2(0, 30), glm::vec2(0, 0), 12.f, 0.1f, 10.f, 0.1f, glm::vec4(1, 0.5f, 0, 1));
-	boxe2->SetKinematic(true);
+	//Box* boxe2 = new Box(glm::vec2(0, 30), glm::vec2(0, 0), 12.f, 0.1f, 10.f, 0.1f, glm::vec4(1, 0.5f, 0, 1));
+	//boxe2->SetKinematic(true);
 
-	pachinko_map.push_back(boxe2);
+	//pachinko_map.push_back(boxe2);
 
 	m_pachinko = new Pachinko(m_physicsScene, pachinko_map);
 	m_pachinko->Start(0.0f);
@@ -148,7 +195,7 @@ void PhysicsProjectApp::draw() {
 
 	// If X-axis = -100 to 100, Y-axis = -56.25 to 56.25
 	aie::Gizmos::draw2D(glm::ortho<float>(-m_extents, m_extents, -m_extents / m_aspectRatio, m_extents / m_aspectRatio, -1.0f, 1.0f));
-
+	
 	// draw your stuff here!
 	char fps[32];
 	sprintf_s(fps, 32, "FPS: %i", getFPS());
@@ -158,6 +205,10 @@ void PhysicsProjectApp::draw() {
 	char score[64];
 	sprintf_s(score, 64, "SCORE: %i", m_pachinko->GetScore());
 	m_2dRenderer->drawText(m_font, score, 0, 720 - 64);
+
+	char balls[64];
+	sprintf_s(balls, 64, "BALLS LEFT: %i", m_pachinko->GetBallsLeft());
+	m_2dRenderer->drawText(m_font, balls, 0, 720 - 96);
 
 	// output some text, uses the last used colour
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);

@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <string>
 
 // This is a pure abstract class.
 // It will be used as a base for the derived classes that will use FixedUpdate
@@ -31,13 +32,18 @@ public:
 	float GetElasticity() { return m_elasticity; }
 
 	// Keep to 1 for realism.
-	float SetElasticity(float a_new) { return m_elasticity = a_new; }
+	void SetElasticity(float a_new) { m_elasticity = a_new; }
+	
+	std::string GetTag() { return m_tag; }
 
+	void SetTag(std::string a_tag) { m_tag = a_tag; }
 protected:
 	ShapeType m_shapeID;
 
 	bool m_isKinematic;
 	float m_elasticity;
+
+	std::string m_tag = "";
 
 	PhysicsObject(ShapeType a_shapeID) : m_shapeID(a_shapeID) {}
 };
