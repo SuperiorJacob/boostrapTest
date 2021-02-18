@@ -13,6 +13,8 @@ public:
 	float GetRadius() { return m_radius; }
 	glm::vec4 GetColour() { return m_colour; }
 
+	void SetColour(glm::vec4 a_col) { m_colour = a_col; }
+
 protected:
 	float m_radius;
 	glm::vec4 m_colour;

@@ -19,6 +19,8 @@ public:
 	glm::vec2 GetPosition() const { return m_position; }
 	glm::vec2 GetVelocity() { return m_velocity; }
 	float GetMass() { return m_isKinematic ? INT_MAX : m_mass; }
+	void SetMass(float a_mass) { m_mass = a_mass; }
+
 	float GetRotation() { return m_rotation; }
 
 	float GetMoment() { return m_isKinematic ? INT_MAX : m_moment; }
@@ -39,6 +41,8 @@ public:
 	std::function<void(PhysicsObject*)> triggerExit;
 	bool IsTrigger() { return m_isTrigger; }
 	bool SetTrigger(bool a_state) { return m_isTrigger = a_state; }
+
+	Rigidbody* m_lastHit = nullptr;
 
 protected:
 	bool m_isTrigger;

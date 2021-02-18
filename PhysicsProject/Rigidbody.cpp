@@ -132,6 +132,9 @@ void Rigidbody::ResolveCollision(Rigidbody* a_otherActor, glm::vec2 a_contact, g
 			{
 				a_otherActor->m_collisionCallback(this);
 			}
+
+			m_lastHit = a_otherActor;
+			a_otherActor->m_lastHit = this;
 		}
 
 		else

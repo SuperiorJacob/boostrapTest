@@ -69,7 +69,7 @@ bool PhysicsProjectApp::startup() {
 
 			// Default
 
-			Sphere* ball = new Sphere(glm::vec2((spacing ? 2.5 : -2.5) + (-x * 10), 40 - y * 10), glm::vec2(0), (mix == 1) ? 100.0f : 3.0f, 1.f, (mix == 1) ? glm::vec4(1, 1, 0.5, 1) : glm::vec4(1, 1, 1, 1));
+			Sphere* ball = new Sphere(glm::vec2((spacing ? 3 : -3) + (-x * 10), 40 - y * 10), glm::vec2(0), (mix == 1) ? 100.0f : 3.0f, 1.3f, (mix == 1) ? glm::vec4(1, 1, 0.5, 1) : glm::vec4(0.5, 0.5, 0.5, 1));
 			ball->SetElasticity((mix == 1) ? 0.1f : 1.f);
 			ball->SetTag("Static");
 
@@ -77,35 +77,35 @@ bool PhysicsProjectApp::startup() {
 
 			// Spring
 
-			//Sphere* ball = new Sphere(glm::vec2((spacing ? 2.5 : -2.5) + (-x * 10), 40 - y * 10), glm::vec2(0), 1.f, 1.f, (mix == 1) ? glm::vec4(1, 1, 0.5, 1) : glm::vec4(1, 1, 1, 1));
-			//ball->SetElasticity((mix == 1) ? 0.1f : 1.f);
-			//ball->SetTag("Static");
+			/*Sphere* ball = new Sphere(glm::vec2((spacing ? 2.5 : -2.5) + (-x * 10), 40 - y * 10), glm::vec2(0), 1.f, 1.f, (mix == 1) ? glm::vec4(1, 1, 0.5, 1) : glm::vec4(1, 1, 1, 1));
+			ball->SetElasticity((mix == 1) ? 0.1f : 1.f);
+			ball->SetTag("Static");
 
-			//if (y == 0)
-			//{
-			//	ball->SetKinematic(true);
-			//}
+			if (y == 0)
+			{
+				ball->SetKinematic(true);
+			} len was here
 
-			//m_physicsScene->AddActor(ball);
+			m_physicsScene->AddActor(ball);
 
-			//int xPos = x + 4;
+			int xPos = x + 4;
 
-			//balls[xPos][y] = ball;
+			balls[xPos][y] = ball;
 
-			//if (((xPos - 1) >= 0) && ((y) >= 0) && balls[xPos - 1][y])
-			//{
-			//	m_physicsScene->AddActor(new Spring(ball, balls[xPos - 1][y], 10, 500));
-			//}
+			if (((xPos - 1) >= 0) && ((y) >= 0) && balls[xPos - 1][y])
+			{
+				m_physicsScene->AddActor(new Spring(ball, balls[xPos - 1][y], 10, 500));
+			}
 
-			//if (((xPos) >= 0) && ((y - 1) >= 0) && balls[xPos][y - 1])
-			//{
-			//	m_physicsScene->AddActor(new Spring(ball, balls[xPos][y - 1], 10, 500));
-			//}
+			if (((xPos) >= 0) && ((y - 1) >= 0) && balls[xPos][y - 1])
+			{
+				m_physicsScene->AddActor(new Spring(ball, balls[xPos][y - 1], 10, 500));
+			}
 
-			//if (((xPos - 1) >= 0) && ((y - 1) >= 0) && balls[xPos - 1][y - 1])
-			//{
-			//	m_physicsScene->AddActor(new Spring(ball, balls[xPos - 1][y - 1], 10, 500));
-			//}
+			if (((xPos - 1) >= 0) && ((y - 1) >= 0) && balls[xPos - 1][y - 1])
+			{
+				m_physicsScene->AddActor(new Spring(ball, balls[xPos - 1][y - 1], 10, 500));
+			}*/
 		}
 
 	}
@@ -146,10 +146,17 @@ bool PhysicsProjectApp::startup() {
 
 	pachinko_map.push_back(boxe1);
 
+	Box* boxe2 = new Box(glm::vec2(0, 0), glm::vec2(0, 0), 0.785398f, 30.f, 5.f, 5.f, glm::vec4(1, 1, 1, 1));
+	boxe2->SetKinematic(true);
+
+	pachinko_map.push_back(boxe2);
+
 	//Box* boxe2 = new Box(glm::vec2(0, 30), glm::vec2(0, 0), 12.f, 0.1f, 10.f, 0.1f, glm::vec4(1, 0.5f, 0, 1));
 	//boxe2->SetKinematic(true);
 
 	//pachinko_map.push_back(boxe2);
+
+	//m_physicsScene->AddActor(new Plane(glm::vec2(0, 1), -55));
 
 	m_pachinko = new Pachinko(m_physicsScene, pachinko_map);
 	m_pachinko->Start(0.0f);

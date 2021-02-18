@@ -159,13 +159,6 @@ std::vector<std::pair<std::string, int> > Highscores::SortScores()
 	// Sort using comparator function 
 	sort(A.begin(), A.end(), cmp);
 
-	// Print the sorted value 
-	for (auto& it : A) {
-
-		std::cout << it.first << ' '
-			<< it.second << std::endl;
-	}
-
 	return A;
 }
 
