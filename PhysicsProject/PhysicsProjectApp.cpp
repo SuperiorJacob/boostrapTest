@@ -36,6 +36,7 @@ bool PhysicsProjectApp::startup() {
 
 	// TODO: remember to change this when redistributing a build!
 	// the following path would be used instead: "./font/consolas.ttf"
+	//m_font = new aie::Font("./font/consolas.ttf", 32);
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
 
 	m_physicsScene = new PhysicsScene();
@@ -146,10 +147,10 @@ bool PhysicsProjectApp::startup() {
 
 	pachinko_map.push_back(boxe1);
 
-	Box* boxe2 = new Box(glm::vec2(0, 0), glm::vec2(0, 0), 0.785398f, 30.f, 5.f, 5.f, glm::vec4(1, 1, 1, 1));
-	boxe2->SetKinematic(true);
+	//Box* boxe2 = new Box(glm::vec2(0, 0), glm::vec2(0, 0), 0.785398f, 30.f, 5.f, 5.f, glm::vec4(1, 1, 1, 1));
+	//boxe2->SetKinematic(true);
 
-	pachinko_map.push_back(boxe2);
+	//pachinko_map.push_back(boxe2);
 
 	//Box* boxe2 = new Box(glm::vec2(0, 30), glm::vec2(0, 0), 12.f, 0.1f, 10.f, 0.1f, glm::vec4(1, 0.5f, 0, 1));
 	//boxe2->SetKinematic(true);
