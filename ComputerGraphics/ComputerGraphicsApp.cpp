@@ -1,8 +1,17 @@
 #include "ComputerGraphicsApp.h"
 #include "Gizmos.h"
 #include "Input.h"
+
+#define GLM_ENABLE_EXPERIMENTAL 1;
+
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
+#include <iostream>
+
 
 using glm::vec3;
 using glm::vec4;
@@ -56,6 +65,8 @@ void ComputerGraphicsApp::update(float deltaTime) {
 	// add a transform so that we can see the axis
 	Gizmos::addTransform(mat4(1));
 
+	solarSystem(deltaTime);
+
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
 
@@ -72,4 +83,31 @@ void ComputerGraphicsApp::draw() {
 	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, getWindowWidth() / (float)getWindowHeight(), 0.1f, 1000.0f);
 
 	Gizmos::draw(m_projectionMatrix * m_viewMatrix);
+}
+
+void ComputerGraphicsApp::solarSystem(float deltaTime)
+{
+	std::cout << deltaTime << " " << m_upTime << std::endl;
+	m_upTime += deltaTime;
+	
+	vec3 rotAxis(0.0f, 1.0f, 0.0f);
+	vec3 sun = vec3(0);
+
+	float angleRad = glm::half_pi<float>() * m_upTime;
+
+	createPlanet(sun, vec4(0), 2, angleRad, rotAxis, vec4(1, 1, 0, 1));
+	vec3 dad = createPlanet(sun, vec4(6, 0, 0, 0), 1, angleRad, rotAxis, vec4(1, 0, 0, 1));
+	vec3 kid = createPlanet(dad, vec4(2, 0, 0, 0), 0.3f, angleRad * 5, rotAxis, vec4(1, 1, 0, 1));
+	vec3 uncle = createPlanet(kid, vec4(2, 0, 0, 0), 0.2f, angleRad * 10, rotAxis, vec4(1, 0, 1, 1));
+
+	//Gizmos::addSphere(sun, 2, 16, 16, vec4(1, 1, 0, 1));
+	//Gizmos::addSphere(mercury, 1, 16, 16, vec4(1, 0, 0, 1));
+}
+
+vec3 ComputerGraphicsApp::createPlanet(vec3 pos, vec4 dist, float size, float angleRad, vec3 rotAxis, vec4 color)
+{
+	vec3 p = glm::rotate(angleRad, rotAxis) * dist;
+	Gizmos::addSphere(pos + p, size, 16, 16, color);
+
+	return pos + p;
 }
