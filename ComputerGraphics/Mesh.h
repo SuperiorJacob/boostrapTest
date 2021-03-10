@@ -22,5 +22,4 @@ protected:
 	unsigned int	vao, // Vertex Array Object 
 					vbo, // Vertex Buffer Object
 					ibo; // Index Buffer Object
-
 };

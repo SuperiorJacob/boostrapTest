@@ -35,8 +35,26 @@ void Mesh::InitialiseQuad()
 
 	// Fill the vertex buffer 
 	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex), vertices, GL_STATIC_DRAW);
+
+	// Enable the first element as a position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+
+	// Unbind the buffers
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Quad has two triangles
+	triCount = 2;
 }
 
 void Mesh::Draw()
 {
+	glBindVertexArray(vao);
+
+	// Check if we are using indices or just vertices
+	if (ibo != 0)
+		glDrawElements(GL_TRIANGLES, 3 * triCount, GL_UNDEFINED_VERTEX, 0);
+	else
+		glDrawArrays(GL_TRIANGLES, 0, 3 * triCount);
 }
