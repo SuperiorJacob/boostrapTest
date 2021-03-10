@@ -34,7 +34,7 @@ bool ComputerGraphicsApp::startup() {
 	Gizmos::create(10000, 10000, 10000, 10000);
 
 	// create simple camera transforms
-	m_viewMatrix = glm::lookAt(vec3(10), vec3(0), vec3(0, 1, 0));
+	m_viewMatrix = glm::lookAt(vec3(150), vec3(0), vec3(0, 1, 0));
 	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
 	return true;
@@ -91,15 +91,21 @@ void ComputerGraphicsApp::solarSystem(float deltaTime)
 	m_upTime += deltaTime;
 	
 	vec3 rotAxis(0.0f, 1.0f, 0.0f);
-	vec3 sun = vec3(0);
 
 	float angleRad = glm::half_pi<float>() * m_upTime;
 
-	createPlanet(sun, vec4(0), 2, angleRad, rotAxis, vec4(1, 1, 0, 1));
-	vec3 dad = createPlanet(sun, vec4(6, 0, 0, 0), 1, angleRad, rotAxis, vec4(1, 0, 0, 1));
-	vec3 kid = createPlanet(dad, vec4(2, 0, 0, 0), 0.3f, angleRad * 5, rotAxis, vec4(1, 1, 0, 1));
-	vec3 uncle = createPlanet(kid, vec4(2, 0, 0, 0), 0.2f, angleRad * 10, rotAxis, vec4(1, 0, 1, 1));
+	vec3 sun = createPlanet(vec3(0), vec4(0), 54, angleRad, rotAxis, vec4(1, 1, 0, 1));
+	vec3 mercury = createPlanet(sun, vec4(58, 0, 0, 0), 0.4, angleRad * 4, rotAxis, vec4(0.8f, 0.8f, 0.8f, 1));
+	vec3 vensus = createPlanet(sun, vec4(60, 0, 0, 0), 1, angleRad * 1.6, rotAxis, vec4(1.f, 0.27f, 0.f, 1));
+	vec3 earth = createPlanet(sun, vec4(64, 0, 0, 0), 1, angleRad, rotAxis, vec4(0.f, 0.f, 0.5f, 1));
+	vec3 mars = createPlanet(sun, vec4(66, 0, 0, 0), 0.5, angleRad * 0.05, rotAxis, vec4(1.f, 0.5f, 0.2f, 1));
+	vec3 jupitar = createPlanet(sun, vec4(80, 0, 0, 0), 11, angleRad * 0.03, rotAxis, vec4(0.8f, 0.5f, 0.f, 1));
+	vec3 saturn = createPlanet(sun, vec4(102, 0, 0, 0), 9.5, angleRad * 0.012, rotAxis, vec4(1.f, 1.f, 0.8f, 1));
+	vec3 uranus = createPlanet(sun, vec4(122, 0, 0, 0), 2.3, angleRad * 0.43, rotAxis, vec4(0.2f, 0.2f, 0.8f, 1));
+	vec3 neptune = createPlanet(sun, vec4(126, 0, 0, 0), 2.5, angleRad * 0.22, rotAxis, vec4(0.2f, 0.2f, 1.f, 1));
 
+
+	//vec3 dad = createPlanet(sun, vec4(6, 0, 0, 0), 1, angleRad, rotAxis, vec4(1, 0, 0, 1));
 	//Gizmos::addSphere(sun, 2, 16, 16, vec4(1, 1, 0, 1));
 	//Gizmos::addSphere(mercury, 1, 16, 16, vec4(1, 0, 0, 1));
 }
