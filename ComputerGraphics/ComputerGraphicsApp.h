@@ -24,5 +24,5 @@ protected:
 	glm::mat4	m_viewMatrix;
 	glm::mat4	m_projectionMatrix;
 
-	float m_upTime = 0.0f;
+	//float m_upTime = 0.0f;
 };

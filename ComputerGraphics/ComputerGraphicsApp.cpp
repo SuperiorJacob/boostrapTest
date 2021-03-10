@@ -85,35 +85,34 @@ void ComputerGraphicsApp::draw() {
 	Gizmos::draw(m_projectionMatrix * m_viewMatrix);
 }
 
-void ComputerGraphicsApp::solarSystem(float deltaTime)
-{
-	std::cout << deltaTime << " " << m_upTime << std::endl;
-	m_upTime += deltaTime;
-	
-	vec3 rotAxis(0.0f, 1.0f, 0.0f);
-
-	float angleRad = glm::half_pi<float>() * m_upTime;
-
-	vec3 sun = createPlanet(vec3(0), vec4(0), 54, angleRad, rotAxis, vec4(1, 1, 0, 1));
-	vec3 mercury = createPlanet(sun, vec4(58, 0, 0, 0), 0.4, angleRad * 4, rotAxis, vec4(0.8f, 0.8f, 0.8f, 1));
-	vec3 vensus = createPlanet(sun, vec4(60, 0, 0, 0), 1, angleRad * 1.6, rotAxis, vec4(1.f, 0.27f, 0.f, 1));
-	vec3 earth = createPlanet(sun, vec4(64, 0, 0, 0), 1, angleRad, rotAxis, vec4(0.f, 0.f, 0.5f, 1));
-	vec3 mars = createPlanet(sun, vec4(66, 0, 0, 0), 0.5, angleRad * 0.05, rotAxis, vec4(1.f, 0.5f, 0.2f, 1));
-	vec3 jupitar = createPlanet(sun, vec4(80, 0, 0, 0), 11, angleRad * 0.03, rotAxis, vec4(0.8f, 0.5f, 0.f, 1));
-	vec3 saturn = createPlanet(sun, vec4(102, 0, 0, 0), 9.5, angleRad * 0.012, rotAxis, vec4(1.f, 1.f, 0.8f, 1));
-	vec3 uranus = createPlanet(sun, vec4(122, 0, 0, 0), 2.3, angleRad * 0.43, rotAxis, vec4(0.2f, 0.2f, 0.8f, 1));
-	vec3 neptune = createPlanet(sun, vec4(126, 0, 0, 0), 2.5, angleRad * 0.22, rotAxis, vec4(0.2f, 0.2f, 1.f, 1));
-
-
-	//vec3 dad = createPlanet(sun, vec4(6, 0, 0, 0), 1, angleRad, rotAxis, vec4(1, 0, 0, 1));
-	//Gizmos::addSphere(sun, 2, 16, 16, vec4(1, 1, 0, 1));
-	//Gizmos::addSphere(mercury, 1, 16, 16, vec4(1, 0, 0, 1));
-}
-
-vec3 ComputerGraphicsApp::createPlanet(vec3 pos, vec4 dist, float size, float angleRad, vec3 rotAxis, vec4 color)
-{
-	vec3 p = glm::rotate(angleRad, rotAxis) * dist;
-	Gizmos::addSphere(pos + p, size, 16, 16, color);
-
-	return pos + p;
-}
+//void solarSystem(float deltaTime)
+//{
+//	std::cout << deltaTime << " " << m_upTime << std::endl;
+//	m_upTime += deltaTime;
+//	
+//	vec3 rotAxis(0.0f, 1.0f, 0.0f);
+//
+//	float angleRad = glm::half_pi<float>() * m_upTime;
+//
+//	vec3 sun = createPlanet(vec3(0), vec4(0), 54, angleRad, rotAxis, vec4(1, 1, 0, 1));
+//	vec3 mercury = createPlanet(sun, vec4(58, 0, 0, 0), 0.4, angleRad * 4, rotAxis, vec4(0.8f, 0.8f, 0.8f, 1));
+//	vec3 vensus = createPlanet(sun, vec4(60, 0, 0, 0), 1, angleRad * 1.6, rotAxis, vec4(1.f, 0.27f, 0.f, 1));
+//	vec3 earth = createPlanet(sun, vec4(64, 0, 0, 0), 1, angleRad, rotAxis, vec4(0.f, 0.f, 0.5f, 1));
+//	vec3 mars = createPlanet(sun, vec4(66, 0, 0, 0), 0.5, angleRad * 0.05, rotAxis, vec4(1.f, 0.5f, 0.2f, 1));
+//	vec3 jupitar = createPlanet(sun, vec4(80, 0, 0, 0), 11, angleRad * 0.03, rotAxis, vec4(0.8f, 0.5f, 0.f, 1));
+//	vec3 saturn = createPlanet(sun, vec4(102, 0, 0, 0), 9.5, angleRad * 0.012, rotAxis, vec4(1.f, 1.f, 0.8f, 1));
+//	vec3 uranus = createPlanet(sun, vec4(122, 0, 0, 0), 2.3, angleRad * 0.43, rotAxis, vec4(0.2f, 0.2f, 0.8f, 1));
+//	vec3 neptune = createPlanet(sun, vec4(126, 0, 0, 0), 2.5, angleRad * 0.22, rotAxis, vec4(0.2f, 0.2f, 1.f, 1));
+//
+//	//vec3 dad = createPlanet(sun, vec4(6, 0, 0, 0), 1, angleRad, rotAxis, vec4(1, 0, 0, 1));
+//	//Gizmos::addSphere(sun, 2, 16, 16, vec4(1, 1, 0, 1));
+//	//Gizmos::addSphere(mercury, 1, 16, 16, vec4(1, 0, 0, 1));
+//}
+//
+//vec3 createPlanet(vec3 pos, vec4 dist, float size, float angleRad, vec3 rotAxis, vec4 color)
+//{
+//	vec3 p = glm::rotate(angleRad, rotAxis) * dist;
+//	Gizmos::addSphere(pos + p, size, 16, 16, color);
+//
+//	return pos + p;
+//}
