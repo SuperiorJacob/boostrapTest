@@ -1,8 +1,11 @@
-// a simple shader for flat colors
+//a simple shader for colors (this is the fragmentation shader)
 #version 410
 
 out vec4 FragColor;
 
-void main(){
-    FragColor = vec(1, 0, 1, 1);
+uniform vec4 color;
+
+void main()
+{
+    FragColor = color;
 }

@@ -2,22 +2,25 @@
 #include "Shader.h"
 #include "Application.h"
 #include <glm/mat4x4.hpp>
+#include "Planet.h"
 #include <vector>
 #include "Mesh.h"
 #include "OBJMesh.h"
 #include "Camera.h"
 
-class ComputerGraphicsApp : public aie::Application {
+class GraphicsProjectApp : public aie::Application {
 public:
 
-	ComputerGraphicsApp();
-	virtual ~ComputerGraphicsApp();
+	GraphicsProjectApp();
+	virtual ~GraphicsProjectApp();
 
 	virtual bool startup();
 	virtual void shutdown();
 
 	virtual void update(float deltaTime);
 	virtual void draw();
+
+	void CreatePlanets();
 
 	bool LoadShaderAndMeshLogic();
 
@@ -29,21 +32,21 @@ protected:
 	Camera m_camera;
 
 
-
+	
 	//shader
 	aie::ShaderProgram m_simpleShader;
 	aie::ShaderProgram m_phongShader;
 	//
 	Mesh m_quadMesh;
 	glm::mat4 m_quadTransform;
-	glm::vec4 meshColor = { 1,0,0,1 };
-
+	glm::vec4 meshColor = {1,0,0,1};
+	
 	//Objects below
 	glm::vec3 bunnyColor = { 1,1,1 };
-	glm::vec3 dragonColor = { 0,0,0 };
+	glm::vec3 dragonColor = { 0,0,0};
 	glm::vec3 LucyColor = { 0,1,0 };
 	glm::vec3 BuddhaColor = { 0,0,1 };
-
+	
 	aie::OBJMesh m_bunnyMesh;
 	glm::mat4 m_bunnyTransform;
 
@@ -65,13 +68,13 @@ protected:
 		1,1,1,1,
 		0,0,0,1
 	};
-
+	
 	struct Light
 	{
 		glm::vec3 direction;
 		glm::vec3 color;
 	};
-
+	
 	Light m_light;
 
 	//this is the intensity of each color in the scene as this applys to every model

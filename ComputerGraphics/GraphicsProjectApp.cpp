@@ -1,4 +1,4 @@
-#include "ComputerGraphicsApp.h"
+#include "GraphicsProjectApp.h"
 #include "Gizmos.h"
 #include "Input.h"
 #include <glm/glm.hpp>
@@ -10,16 +10,16 @@ using glm::vec4;
 using glm::mat4;
 using aie::Gizmos;
 
-ComputerGraphicsApp::ComputerGraphicsApp() {
+GraphicsProjectApp::GraphicsProjectApp() {
 
 }
 
-ComputerGraphicsApp::~ComputerGraphicsApp() {
-
+GraphicsProjectApp::~GraphicsProjectApp() {
+	
 }
 
-bool ComputerGraphicsApp::startup() {
-
+bool GraphicsProjectApp::startup() {
+	
 	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
 	// initialise gizmo primitive counts
@@ -27,22 +27,23 @@ bool ComputerGraphicsApp::startup() {
 
 	// create simple camera transforms
 	m_viewMatrix = glm::lookAt(vec3(10), vec3(0), vec3(0, 1, 0));
-	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, (float)getWindowWidth() /
+	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, (float)getWindowWidth() / 
 		(float)getWindowHeight(), 0.1f, 1000.0f);
-
+	//CreatePlanets();
+	
 	m_light.color = { 1,0.1f,1 };
 	m_ambientLight = { 0.25f,0.25f,0.25f };
 
-
+	
 	return LoadShaderAndMeshLogic();
 }
 
-void ComputerGraphicsApp::shutdown() {
+void GraphicsProjectApp::shutdown() {
 
 	Gizmos::destroy();
 }
 
-void ComputerGraphicsApp::update(float deltaTime) {
+void GraphicsProjectApp::update(float deltaTime) {
 
 	// wipe the gizmos clean for this frame
 	Gizmos::clear();
@@ -52,27 +53,27 @@ void ComputerGraphicsApp::update(float deltaTime) {
 	vec4 black(0, 0, 0, 1);
 	for (int i = 0; i < 21; ++i) {
 		Gizmos::addLine(vec3(-10 + i, 0, 10),
-			vec3(-10 + i, 0, -10),
-			i == 10 ? white : black);
+						vec3(-10 + i, 0, -10),
+						i == 10 ? white : black);
 		Gizmos::addLine(vec3(10, 0, -10 + i),
-			vec3(-10, 0, -10 + i),
-			i == 10 ? white : black);
+						vec3(-10, 0, -10 + i),
+						i == 10 ? white : black);
 	}
 	ImguiLogic();
 	float time = getTime();
-
+	
 	// add a transform so that we can see the axis
 	Gizmos::addTransform(mat4(1));
 
 	m_camera.Update(deltaTime);
-
+	
 	aie::Input* input = aie::Input::getInstance();
 
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 }
 
-void ComputerGraphicsApp::draw() {
+void GraphicsProjectApp::draw() {
 
 	// wipe the screen to the background colour
 	clearScreen();
@@ -82,10 +83,10 @@ void ComputerGraphicsApp::draw() {
 	// update perspective based on screen size
 	//m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, getWindowWidth() / (float)getWindowHeight(), 0.1f, 1000.0f);
 	DrawShaderAndMeshes(projectionMatrix, viewMatrix);
-
+		
 	Gizmos::draw(projectionMatrix * viewMatrix);
 }
-bool ComputerGraphicsApp::LoadShaderAndMeshLogic()
+bool GraphicsProjectApp::LoadShaderAndMeshLogic()
 {
 #pragma  region Quad
 
@@ -104,19 +105,19 @@ bool ComputerGraphicsApp::LoadShaderAndMeshLogic()
 	vertices[0].position = { -0.5f, 0.f, 0.5f, 1.0f };
 	vertices[1].position = { 0.5f, 0.f, 0.5f, 1.0f };
 	vertices[2].position = { -0.5f, 0.f,-0.5f, 1.0f };
-	vertices[3].position = { 0.5f, 0.f,-0.5f, 1.0f };
+	vertices[3].position = { 0.5f, 0.f,-0.5f, 1.0f }; 
 	unsigned int indices[6] = { 0,1,2,2,1,3 };
 
-
-	m_quadMesh.Initialise(4, vertices, 6, indices);
-
+	
+	m_quadMesh.Initialise(4, vertices, 6 , indices);
+	
 	m_quadTransform = {
 		10,0,0,0,
 		0,10,0,0,
 		0,0,10,0,
 		0,0,0,1
 	};
-
+	
 #pragma  endregion 
 #pragma region  Bunny
 	if (m_bunnyMesh.load("./stanford/Bunny.obj") == false)
@@ -171,7 +172,7 @@ bool ComputerGraphicsApp::LoadShaderAndMeshLogic()
 	};
 #pragma endregion 
 #pragma region Phong
-
+	
 	m_phongShader.loadShader(aie::eShaderStage::VERTEX, "./shaders/phong.vert");
 	m_phongShader.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/phong.frag");
 	if (m_phongShader.link() == false)
@@ -184,18 +185,18 @@ bool ComputerGraphicsApp::LoadShaderAndMeshLogic()
 	return true;
 }
 
-void ComputerGraphicsApp::DrawShaderAndMeshes(glm::mat4 a_projectionMatrix, glm::mat4 a_viewMatrix)
+void GraphicsProjectApp::DrawShaderAndMeshes(glm::mat4 a_projectionMatrix, glm::mat4 a_viewMatrix)
 {
 	auto pvm = a_projectionMatrix * a_viewMatrix * glm::mat4(0);
 #pragma  region Quad
 	//bind the shader 
 	m_simpleShader.bind();
 	//bind the transform of the mesh
-	pvm = a_projectionMatrix * a_viewMatrix * m_quadTransform;
-	m_simpleShader.bindUniform("ProjectionViewModel", pvm);
+	pvm = a_projectionMatrix * a_viewMatrix * m_quadTransform;	
+	m_simpleShader.bindUniform("ProjectionViewModel",pvm);
 	m_simpleShader.bindUniform("color", meshColor);
 	m_quadMesh.Draw();
-
+	
 #pragma  endregion 
 #pragma region Phong
 	m_phongShader.bind();
@@ -204,7 +205,7 @@ void ComputerGraphicsApp::DrawShaderAndMeshes(glm::mat4 a_projectionMatrix, glm:
 	m_phongShader.bindUniform("AmbientColor", m_ambientLight);
 	m_phongShader.bindUniform("LightColor", m_light.color);
 	m_phongShader.bindUniform("LightDirection", m_light.direction);
-
+	
 #pragma endregion 
 #pragma region Bunny
 	//bind the pvm
@@ -231,7 +232,7 @@ void ComputerGraphicsApp::DrawShaderAndMeshes(glm::mat4 a_projectionMatrix, glm:
 	pvm = a_projectionMatrix * a_viewMatrix * m_lucyTransform;
 	m_phongShader.bindUniform("ProjectionViewModel", pvm);
 	m_phongShader.bindUniform("AmbientColor", LucyColor);
-
+	
 	//bind the lighting transforms
 	m_phongShader.bindUniform("ModelMatrix", m_lucyTransform);
 	m_lucyMesh.draw();
@@ -249,9 +250,9 @@ void ComputerGraphicsApp::DrawShaderAndMeshes(glm::mat4 a_projectionMatrix, glm:
 
 }
 
-void ComputerGraphicsApp::ImguiLogic()
+void GraphicsProjectApp::ImguiLogic()
 {
-
+	
 	ImGui::Begin("Scene Light Settings");
 
 	//scene lighting options
@@ -265,16 +266,16 @@ void ComputerGraphicsApp::ImguiLogic()
 	ImGui::DragFloat3("Buddha Color", &BuddhaColor[0], 0.1f, 0, 2);
 
 	//model transforms the 0000 is to give them basic values not the 29547y29874 they start with 
-
-	ImGui::SliderFloat3("Bunny Transform", &imguiPos[0], -10, 10);
-
-	if (ImGui::Button("Apply"))
+	
+	ImGui::SliderFloat3("Bunny Transform",&imguiPos[0], -10, 10);
+	
+	if(ImGui::Button("Apply"))
 	{
 		m_bunnyTransform *= resetMatrix;
 		m_bunnyTransform = glm::translate(m_bunnyTransform, imguiPos);
 	}
 
 
-
+	
 	ImGui::End();
 }
