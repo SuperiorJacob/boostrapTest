@@ -1,9 +1,9 @@
-#include "ComputerGraphicsApp.h"
+#include "GraphicsProjectApp.h"
 
 int main() {
 	
 	// allocation
-	auto app = new ComputerGraphicsApp();
+	auto app = new GraphicsProjectApp();
 
 	// initialise and loop
 	app->run("AIE", 1280, 720, false);

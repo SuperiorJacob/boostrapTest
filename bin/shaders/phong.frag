@@ -1,50 +1,47 @@
-//a simple shader for a Phong implementation 
+// Phong shader for simple game lighting
 #version 410
 
 in vec4 vPosition;
 in vec3 vNormal;
 
-uniform vec3 Ka; //ambient color of the models material
-uniform vec3 Kd; // the diffuse color of the models material
-uniform vec3 Ks; // the specularcolor of the moddels material
-uniform float Ns; // the specular power of the models material 
+uniform vec3 Ka; // The ambient color of the model's material
+uniform vec3 Kd; // The diffuse color of the model's material
+uniform vec3 Ks; // The specular color of the model's material
+uniform float Ns; // The specular power of the model's material
 
-uniform vec3 AmbientColor; //ambient color of the lgight
-uniform vec3 LightColor; // color of hte light
+uniform vec3 AmbientColor; // Ambient color of the ligtht
+uniform vec3 LightColor; // Color of the light
 uniform vec3 LightDirection;
 
-
-uniform vec3 CameraPosition; //position of the viewport camera for the specular calculations
+uniform vec3 CameraPosition; // Position of the viewport camera for specular calculations
 
 out vec4 FragColor;
-//probs go back on the lighting tutorial later 
-
 
 void main()
 {
-    //make sure the normal and the light directions have been normalized
+    // Make sure the normal and the light directions have been normalised
     vec3 N = normalize(vNormal);
     vec3 L = normalize(LightDirection);
 
-    //now we can calculate the lambert term, negative the light direction
-    float lambertTerm = max(0,min(1,dot(N,-L)));
+    // Now we can calculate the lambert term, negative the light direction
+    float lambertTerm = max(0, min(1, dot(N, -L)));
 
-    //calculate the view vector and the reflection vector
+    // Calculate the view vector and the reflection vector
     vec3 V = normalize(CameraPosition - vPosition.xyz);
-    vec3 R = reflect(L,N);
+    vec3 R = reflect(L, N);
 
-    //determine the value of the specular term 
-    float specularTerm = pow(max(0,dot(R,V)),32);
+    // Determine the value of the specular term
+    float specularTerm = pow(max(0, dot(R, V)), 32);
 
-    //determine the value of the ambient 
+    // Determine the value of the ambient
     vec3 ambient = AmbientColor * Ka;
 
-    //Determine the value of the diffuse 
+    // Determine the value of the diffuse
     vec3 diffuse = LightColor * Kd * lambertTerm;
 
-    //determine the value of the specular 
+    // Determnine the value of the specular
     vec3 specular = LightColor * Ks * specularTerm;
 
-    //output the final color 
-    FragColor = vec4(ambient + diffuse + specular, 1);
+    // Output the final color
+    FragColor = vec4(ambient + diffuse + specularTerm, 1);
 }

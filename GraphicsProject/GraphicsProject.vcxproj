@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CC5C8C5F-8388-4A34-BB60-ACB4FAF46B0A}</ProjectGuid>
+    <ProjectGuid>{665661F7-C43C-48CC-883B-48F4C2367497}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ComputerGraphics</RootNamespace>
+    <RootNamespace>GraphicsProject</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -167,7 +167,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ComputerGraphicsApp.cpp" />
+    <ClCompile Include="GraphicsProjectApp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
@@ -175,7 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="ComputerGraphicsApp.h" />
+    <ClInclude Include="GraphicsProjectApp.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OBJMesh.h" />
     <ClInclude Include="Shader.h" />
