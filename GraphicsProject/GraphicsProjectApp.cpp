@@ -38,7 +38,7 @@ bool GraphicsProjectApp::startup()
 	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, getWindowWidth() / (float)getWindowHeight(), 0.1f, 1000.0f);
 
 	m_light.color = { 1, 1, 1 };
-	m_ambientLight = { 0.25f, 0.25f, 0.25f};
+	m_ambientLight = { 1.25f, 1.25f, 1.25f};
 
 	return LoadShaderAndMeshLogic();
 }
@@ -317,6 +317,20 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic()
 
 #pragma endregion
 
+#pragma region Ship
+	if (m_ship.mesh.load("./trifighter/Tri_Fighter.obj", true, false) == false)
+	{
+		printf("Ship Mesh has had an error!\n");
+		return false;
+	}
+
+	m_ship.position = { -3, 0, 0 };
+	m_ship.scale = { 0.01f, 0.01f, 0.01f };
+	m_ship.rotation = { 0, 0, 0 };
+	m_ship.name = "Ship";
+
+#pragma endregion
+
 	return true;
 }
 
@@ -447,19 +461,35 @@ void GraphicsProjectApp::DrawShaderAndMeshes(glm::mat4 a_projectionMatrix, glm::
 #pragma endregion
 
 #pragma region Soulspear
+	//m_normalMapShader.bind();
+
+	//// Bind the transform
+	//pvm = a_projectionMatrix * a_viewMatrix * m_spear.transform;
+	//m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
+	//m_normalMapShader.bindUniform("CameraPosition", m_camera.GetPosition());
+	//m_normalMapShader.bindUniform("AmbientColor", m_ambientLight);
+	//m_normalMapShader.bindUniform("LightColor", m_light.color);
+	//m_normalMapShader.bindUniform("LightDirection", m_light.direction);
+	//m_normalMapShader.bindUniform("ModelMatrix", m_spear.transform);
+
+	//// Draw the mesh
+	//m_spear.mesh.draw();
+#pragma endregion
+
+#pragma region Ship
 	m_normalMapShader.bind();
 
 	// Bind the transform
-	pvm = a_projectionMatrix * a_viewMatrix * m_spear.transform;
+	pvm = a_projectionMatrix * a_viewMatrix * m_ship.transform;
 	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
 	m_normalMapShader.bindUniform("CameraPosition", m_camera.GetPosition());
 	m_normalMapShader.bindUniform("AmbientColor", m_ambientLight);
 	m_normalMapShader.bindUniform("LightColor", m_light.color);
 	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
-	m_normalMapShader.bindUniform("ModelMatrix", m_spear.transform);
+	m_normalMapShader.bindUniform("ModelMatrix", m_ship.transform);
 
 	// Draw the mesh
-	m_spear.mesh.draw();
+	m_ship.mesh.draw();
 #pragma endregion
 
 }
@@ -476,36 +506,53 @@ void GraphicsProjectApp::UpdateObjectTransforms()
 	m_bunny.transform = glm::rotate(m_bunny.transform, glm::radians(m_bunny.rotation.z), glm::vec3(0, 0, 1));
 
 	// --- DRAGON ---
-	m_dragon.transform = {
-		m_dragon.scale.x,     0,     0,  0,
-		   0,  m_dragon.scale.y,     0,  0,
-		   0,     0,  m_dragon.scale.z,  0,
-	    m_dragon.position.x, m_dragon.position.y, m_dragon.position.z, 1
-	};
+	m_dragon.transform = glm::mat4(1.0f);
+
+	m_dragon.transform = glm::translate(m_dragon.transform, m_dragon.position);
+	m_dragon.transform = glm::scale(m_dragon.transform, m_dragon.scale);
+	m_dragon.transform = glm::rotate(m_dragon.transform, glm::radians(m_dragon.rotation.x), glm::vec3(1, 0, 0));
+	m_dragon.transform = glm::rotate(m_dragon.transform, glm::radians(m_dragon.rotation.y), glm::vec3(0, 1, 0));
+	m_dragon.transform = glm::rotate(m_dragon.transform, glm::radians(m_dragon.rotation.z), glm::vec3(0, 0, 1));
+
 
 	// --- BUDDHA ---
-	m_buddha.transform = {
-		 m_buddha.scale.x,     0,     0,  0,
-			0,  m_buddha.scale.y,     0,  0,
-			0,     0,  m_buddha.scale.z,  0,
-		 m_buddha.position.x, m_buddha.position.y, m_buddha.position.z, 1
-	};
+	m_buddha.transform = glm::mat4(1.0f);
+
+	m_buddha.transform = glm::translate(m_buddha.transform, m_buddha.position);
+	m_buddha.transform = glm::scale(m_buddha.transform, m_bunny.scale);
+	m_buddha.transform = glm::rotate(m_buddha.transform, glm::radians(m_buddha.rotation.x), glm::vec3(1, 0, 0));
+	m_buddha.transform = glm::rotate(m_buddha.transform, glm::radians(m_buddha.rotation.y), glm::vec3(0, 1, 0));
+	m_buddha.transform = glm::rotate(m_buddha.transform, glm::radians(m_buddha.rotation.z), glm::vec3(0, 0, 1));
+
 
 	// --- LUCY ---
-	m_lucy.transform = {
-		m_lucy.scale.x,     0,     0,  0,
-		   0,  m_lucy.scale.y,     0,  0,
-		   0,     0,  m_lucy.scale.z,  0,
-	    m_lucy.position.x, m_lucy.position.y, m_lucy.position.z, 1
-	};
+	m_lucy.transform = glm::mat4(1.0f);
+
+	m_lucy.transform = glm::translate(m_lucy.transform, m_lucy.position);
+	m_lucy.transform = glm::scale(m_lucy.transform, m_lucy.scale);
+	m_lucy.transform = glm::rotate(m_lucy.transform, glm::radians(m_lucy.rotation.x), glm::vec3(1, 0, 0));
+	m_lucy.transform = glm::rotate(m_lucy.transform, glm::radians(m_lucy.rotation.y), glm::vec3(0, 1, 0));
+	m_lucy.transform = glm::rotate(m_lucy.transform, glm::radians(m_lucy.rotation.z), glm::vec3(0, 0, 1));
+
 
 	// --- SOUL SPEAR ---
-	m_spear.transform = {
-		m_spear.scale.x,     0,     0,  0,
-		   0,  m_spear.scale.y,     0,  0,
-		   0,     0,  m_spear.scale.z,  0,
-		m_spear.position.x, m_spear.position.y, m_spear.position.z, 1
-	};
+	m_spear.transform = glm::mat4(1.0f);
+
+	m_spear.transform = glm::translate(m_spear.transform, m_spear.position);
+	m_spear.transform = glm::scale(m_spear.transform, m_spear.scale);
+	m_spear.transform = glm::rotate(m_spear.transform, glm::radians(m_spear.rotation.x), glm::vec3(1, 0, 0));
+	m_spear.transform = glm::rotate(m_spear.transform, glm::radians(m_spear.rotation.y), glm::vec3(0, 1, 0));
+	m_spear.transform = glm::rotate(m_spear.transform, glm::radians(m_spear.rotation.z), glm::vec3(0, 0, 1));
+
+	// Ship
+	m_ship.transform = glm::mat4(1.0f);
+
+	m_ship.transform = glm::translate(m_ship.transform, m_ship.position);
+	m_ship.transform = glm::scale(m_ship.transform, m_ship.scale);
+	m_ship.transform = glm::rotate(m_ship.transform, glm::radians(m_ship.rotation.x), glm::vec3(1, 0, 0));
+	m_ship.transform = glm::rotate(m_ship.transform, glm::radians(m_ship.rotation.y), glm::vec3(0, 1, 0));
+	m_ship.transform = glm::rotate(m_ship.transform, glm::radians(m_ship.rotation.z), glm::vec3(0, 0, 1));
+
 }
 
 void GraphicsProjectApp::IMGUI_Logic()
@@ -518,27 +565,33 @@ void GraphicsProjectApp::IMGUI_Logic()
 	ImGui::Begin("Objects");
 
 	if (ImGui::CollapsingHeader(m_bunny.name.c_str())) {
-		ImGui::DragFloat3("Position", &m_bunny.position[0], 0.01f);
-		ImGui::DragFloat3("Rotation", &m_bunny.rotation[0], 0.01f);
-		ImGui::DragFloat3("Scale", &m_bunny.scale[0], 0.01f);
+		ImGui::DragFloat3("Position", &m_bunny.position[0], 0.1f);
+		ImGui::DragFloat3("Rotation", &m_bunny.rotation[0], 0.1f);
+		ImGui::DragFloat3("Scale", &m_bunny.scale[0], 0.1f);
 	}
 
 	if (ImGui::CollapsingHeader(m_dragon.name.c_str())) {
-		ImGui::DragFloat3("Position", &m_dragon.position[0], 0.01f);
-		ImGui::DragFloat3("Rotation", &m_dragon.rotation[0], 0.01f);
-		ImGui::DragFloat3("Scale", &m_dragon.scale[0], 0.01f);
+		ImGui::DragFloat3("Position", &m_dragon.position[0], 0.1f);
+		ImGui::DragFloat3("Rotation", &m_dragon.rotation[0], 0.1f);
+		ImGui::DragFloat3("Scale", &m_dragon.scale[0], 0.1f);
 	}
 
 	if (ImGui::CollapsingHeader(m_buddha.name.c_str())) {
-		ImGui::DragFloat3("Position", &m_buddha.position[0], 0.01f);
-		ImGui::DragFloat3("Rotation", &m_buddha.rotation[0], 0.01f);
-		ImGui::DragFloat3("Scale", &m_buddha.scale[0], 0.01f);
+		ImGui::DragFloat3("Position", &m_buddha.position[0], 0.1f);
+		ImGui::DragFloat3("Rotation", &m_buddha.rotation[0], 0.1f);
+		ImGui::DragFloat3("Scale", &m_buddha.scale[0], 0.1f);
 	}
 
 	if (ImGui::CollapsingHeader(m_lucy.name.c_str())) {
-		ImGui::DragFloat3("Position", &m_lucy.position[0], 0.01f);
-		ImGui::DragFloat3("Rotation", &m_lucy.rotation[0], 0.01f);
-		ImGui::DragFloat3("Scale", &m_lucy.scale[0], 0.01f);
+		ImGui::DragFloat3("Position", &m_lucy.position[0], 0.1f);
+		ImGui::DragFloat3("Rotation", &m_lucy.rotation[0], 0.1f);
+		ImGui::DragFloat3("Scale", &m_lucy.scale[0], 0.1f);
+	}
+
+	if (ImGui::CollapsingHeader(m_spear.name.c_str())) {
+		ImGui::DragFloat3("Position", &m_spear.position[0], 0.1f);
+		ImGui::DragFloat3("Rotation", &m_spear.rotation[0], 0.1f);
+		ImGui::DragFloat3("Scale", &m_spear.scale[0], 0.1f);
 	}
 
 	UpdateObjectTransforms();

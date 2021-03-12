@@ -1,0 +1,13 @@
+#
+#
+#
+
+newmtl _Tri_Fighter_MAT
+illum 2
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ns 20.000000
+map_Kd trifighter_diffuse.tga
+map_Ks trifighter_specular.tga
+bump trifighter_normal.tga

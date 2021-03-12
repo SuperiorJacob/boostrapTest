@@ -59,6 +59,7 @@ protected:
 	IMGUI_OBJECT_INFO m_buddha;
 	IMGUI_OBJECT_INFO m_lucy;
 	IMGUI_OBJECT_INFO m_spear;
+	IMGUI_OBJECT_INFO m_ship;
 
 	struct Light
 	{

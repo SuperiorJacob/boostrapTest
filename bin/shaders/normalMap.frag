@@ -63,7 +63,11 @@ void main()
     //FragColor = vec4(N, 1);
 
     // Show texture normals
-    FragColor = vec4(texNormal, 1);
+    //FragColor = vec4(texNormal, 1);
+
+    // Show without textures
+    //FragColor = vec4(ambient + lambertTerm + specular, 1);
 
     // Output the final color
+    FragColor = vec4(ambient + diffuse + specular, 1);
 }
