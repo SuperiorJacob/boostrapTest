@@ -28,34 +28,37 @@ protected:
 	glm::mat4	m_viewMatrix;
 	glm::mat4	m_projectionMatrix;
 
+	aie::Texture	m_gridTexture;
+
 	// --- SHADER ---
-	aie::ShaderProgram m_simpleShader;
-	aie::ShaderProgram m_bunnyShader;
-	aie::ShaderProgram m_dragonShader;
-	aie::ShaderProgram m_buddhaShader;
-	aie::ShaderProgram m_lucyShader;
-	aie::ShaderProgram m_phongShader;
+	aie::ShaderProgram	m_simpleShader;
+	aie::ShaderProgram	m_bunnyShader;
+	aie::ShaderProgram	m_dragonShader;
+	aie::ShaderProgram	m_buddhaShader;
+	aie::ShaderProgram	m_lucyShader;
+	aie::ShaderProgram	m_phongShader;
+	aie::ShaderProgram	m_textureShader;
+	aie::ShaderProgram	m_normalMapShader;
 	// --------------
 	// Basic Plane
-	Mesh m_quadMesh;
-	glm::mat4 m_quadTransform;
-	// Create a Bunny with a flat color
-	aie::OBJMesh m_bunnyMesh;
-	glm::mat4 m_bunnyTransform;
-	glm::vec3 m_bunnyPos;
-	// Create a Dragon with a flat color
-	aie::OBJMesh m_dragonMesh;
-	glm::mat4 m_dragonTransform;
-	glm::vec3 m_dragonPos;
-	// Create a Buddha with a flat color
-	aie::OBJMesh m_buddhaMesh;
-	glm::mat4 m_buddhaTransform;
-	glm::vec3 m_buddhaPos;
-	// Create Lucy with a flat color
-	aie::OBJMesh m_lucyMesh;
-	glm::mat4 m_lucyTransform;
-	glm::vec3 m_lucyPos;
+	Mesh			m_quadMesh;
+	glm::mat4		m_quadTransform;
 
+	struct IMGUI_OBJECT_INFO
+	{
+		std::string name;
+		aie::OBJMesh mesh;
+		glm::mat4 transform;
+		glm::vec3 position;
+		glm::vec3 rotation;
+		glm::vec3 scale;
+	};
+
+	IMGUI_OBJECT_INFO m_bunny;
+	IMGUI_OBJECT_INFO m_dragon;
+	IMGUI_OBJECT_INFO m_buddha;
+	IMGUI_OBJECT_INFO m_lucy;
+	IMGUI_OBJECT_INFO m_spear;
 
 	struct Light
 	{
