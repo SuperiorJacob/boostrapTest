@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "OBJMesh.h"
 #include <glm/mat4x4.hpp>
+#include <vector>
 
 class GraphicsProjectApp : public aie::Application {
 public:
@@ -46,7 +47,7 @@ protected:
 
 	struct IMGUI_OBJECT_INFO
 	{
-		std::string name;
+		char* name;
 		aie::OBJMesh mesh;
 		glm::mat4 transform;
 		glm::vec3 position;
@@ -54,12 +55,14 @@ protected:
 		glm::vec3 scale;
 	};
 
-	IMGUI_OBJECT_INFO m_bunny;
-	IMGUI_OBJECT_INFO m_dragon;
-	IMGUI_OBJECT_INFO m_buddha;
-	IMGUI_OBJECT_INFO m_lucy;
-	IMGUI_OBJECT_INFO m_spear;
-	IMGUI_OBJECT_INFO m_ship;
+	std::vector<IMGUI_OBJECT_INFO*> m_objectList;
+
+	aie::OBJMesh m_bunny;
+	aie::OBJMesh m_dragon;
+	aie::OBJMesh m_buddha;
+	aie::OBJMesh m_lucy;
+	aie::OBJMesh m_spear;
+	aie::OBJMesh m_barrel;
 
 	struct Light
 	{
