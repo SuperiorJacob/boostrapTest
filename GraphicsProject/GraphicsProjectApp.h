@@ -4,6 +4,10 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Shader.h"
+
+#include "Scene.h"
+#include "Instance.h"
+
 #include "OBJMesh.h"
 #include <glm/mat4x4.hpp>
 #include <vector>
@@ -31,6 +35,8 @@ protected:
 
 	aie::Texture	m_gridTexture;
 
+	Scene* m_scene;
+
 	// --- SHADER ---
 	aie::ShaderProgram	m_simpleShader;
 	aie::ShaderProgram	m_bunnyShader;
@@ -45,18 +51,6 @@ protected:
 	Mesh			m_quadMesh;
 	glm::mat4		m_quadTransform;
 
-	struct IMGUI_OBJECT_INFO
-	{
-		char* name;
-		aie::OBJMesh mesh;
-		glm::mat4 transform;
-		glm::vec3 position;
-		glm::vec3 rotation;
-		glm::vec3 scale;
-	};
-
-	std::vector<IMGUI_OBJECT_INFO*> m_objectList;
-
 	aie::OBJMesh m_bunny;
 	aie::OBJMesh m_dragon;
 	aie::OBJMesh m_buddha;
@@ -64,18 +58,19 @@ protected:
 	aie::OBJMesh m_spear;
 	aie::OBJMesh m_barrel;
 
-	struct Light
-	{
-		glm::vec3 direction;
-		glm::vec3 color;
-	};
+	char* gui_add_name = "";
 
-	Light m_light;
-	glm::vec3 m_ambientLight;
+	//struct Light
+	//{
+	//	glm::vec3 direction;
+	//	glm::vec3 color;
+	//};
+
+	//Light m_light;
+	//glm::vec3 m_ambientLight;
 
 public:
-	bool LoadShaderAndMeshLogic();
-	void DrawShaderAndMeshes(glm::mat4, glm::mat4);
-	void UpdateObjectTransforms();
+	bool LoadShaderAndMeshLogic(Light a_light);
+	//void DrawShaderAndMeshes(glm::mat4, glm::mat4);
 	void IMGUI_Logic();
 };

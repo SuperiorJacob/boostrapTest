@@ -12,7 +12,6 @@ out vec2 vTexCoord;
 out vec3 vTangent;
 out vec3 vBiTangent;
 
-
 uniform mat4 ProjectionViewModel;
 
 // We need this for the transform normal
