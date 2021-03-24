@@ -23,12 +23,12 @@ public:
 	void SetTransform(glm::mat4 a_transform) { m_transform = a_transform; }
 	static glm::mat4 MakeTransform(glm::vec3 a_position, glm::vec3 a_eulerAngles, glm::vec3 a_scale);
 
-	char* m_name = "                    ";
+	char* m_name = "Game Object";
+	glm::vec3				m_rotation;
 
 protected:
 	glm::mat4				m_transform;
 	aie::OBJMesh*			m_mesh;
 	aie::ShaderProgram*		m_shader;
-
 };
 

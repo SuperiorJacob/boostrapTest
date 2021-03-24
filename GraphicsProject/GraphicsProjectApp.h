@@ -58,8 +58,6 @@ protected:
 	aie::OBJMesh m_spear;
 	aie::OBJMesh m_barrel;
 
-	char* gui_add_name = "";
-
 	//struct Light
 	//{
 	//	glm::vec3 direction;

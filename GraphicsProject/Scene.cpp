@@ -21,7 +21,6 @@ Scene::~Scene()
 void Scene::AddInstance(Instance* a_instance)
 {
 	m_instances.push_back(a_instance);
-
 }
 
 void Scene::Draw()
@@ -58,10 +57,10 @@ void Scene::IMGUI_Logic()
 			//ImGui::InputText("Name", instance->m_name, std::strlen(instance->m_name));
 
 			ImGui::DragFloat3("Position", &position[0], 0.1f);
-			ImGui::DragFloat3("Rotation", &rotation[0], 0.1f);
+			ImGui::DragFloat3("Rotation", &instance->m_rotation[0], 0.1f);
 			ImGui::DragFloat3("Scale", &scale[0], 0.1f);
 
-			instance->SetTransform(instance->MakeTransform(position, rotation * glm::vec3(1), scale));
+			instance->SetTransform(instance->MakeTransform(position, instance->m_rotation, scale));
 		}
 	}
 

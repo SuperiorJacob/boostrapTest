@@ -309,14 +309,27 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
 
 	m_scene = new Scene(&m_camera, glm::vec2(getWindowWidth(), getWindowHeight()), a_light, glm::vec3(0.25f));
 
-	Instance* inst = new Instance(glm::vec3(0, 0, 0),
-		glm::vec3(0, 0, 0),
-		glm::vec3(1),
-		&m_spear,
-		&m_normalMapShader);
-
-	inst->m_name = "Game Object";
+	// Yes horrific
+	Instance* inst = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_spear, &m_normalMapShader);
+	inst->m_name = "Spear";
 	m_scene->AddInstance(inst);
+
+	//Instance* inst1 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_bunny, &m_bunnyShader);
+	//inst1->m_name = "Bunny";
+	//m_scene->AddInstance(inst1);
+
+	//Instance* inst2 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_dragon, &m_dragonShader);
+	//inst2->m_name = "Dragon";
+	//m_scene->AddInstance(inst2);
+
+	//Instance* inst3 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_lucy, &m_lucyShader);
+	//inst3->m_name = "Lucy";
+	//m_scene->AddInstance(inst3);
+
+	Instance* inst4 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_barrel, &m_normalMapShader);
+	inst4->m_name = "Barrel";
+	m_scene->AddInstance(inst4);
+	//
 
 	// Add a red light on the left side
 	m_scene->GetPointLights().push_back(Light(vec3(5, 3, 0), vec3(1, 0, 0), 50));
@@ -510,23 +523,6 @@ void GraphicsProjectApp::IMGUI_Logic()
 	ImGui::Begin("Scene Light Settings");
 	ImGui::DragFloat3("Sunlight Direction", &m_scene->GetLight().m_direction[0], 0.1f, -1.0f, 1.0f);
 	ImGui::ColorEdit3("Sunlight Color", &m_scene->GetLight().m_color[0]);
-	ImGui::End();
-
-	ImGui::Begin("Create Objects");
-
-	ImGui::InputText("Name", gui_add_name, std::strlen(gui_add_name));
-
-	if (ImGui::Button("+"))
-	{
-		Instance* inst = new Instance(glm::vec3(0, 0, 0),
-			glm::vec3(0, 30, 0),
-			glm::vec3(1),
-			&m_barrel,
-			&m_normalMapShader);
-
-		inst->m_name = gui_add_name;
-		m_scene->AddInstance(inst);
-	}
 	ImGui::End();
 
 	m_scene->IMGUI_Logic();
