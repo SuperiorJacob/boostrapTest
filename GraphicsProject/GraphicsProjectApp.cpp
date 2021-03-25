@@ -94,9 +94,27 @@ void GraphicsProjectApp::draw()
 	// update perspective based on screen size
 	//m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, getWindowWidth() / (float)getWindowHeight(), 0.1f, 1000.0f);
 
+#pragma region Quad
+	auto pvm = projectionMatrix * viewMatrix * m_quadTransform;
+	m_textureShader.bind();
+
+	m_textureShader.bindUniform("ProjectionViewModel", pvm);
+
+	// Bind the texture to a location of your choice (0)
+	m_textureShader.bindUniform("diffuseTexture", 0);
+
+	// Bind the texture to the specificed location
+	m_gridTexture.bind(0);
+
+	// Draw the quad...
+	m_quadMesh.Draw();
+
 	m_scene->Draw();
 
+#pragma endregion
+
 	Gizmos::draw(projectionMatrix * viewMatrix);
+	Gizmos::draw2D((float)getWindowWidth(), (float)getWindowHeight());
 }
 
 void GraphicsProjectApp::SolarSystem(float dt)

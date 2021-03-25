@@ -38,6 +38,9 @@ protected:
 	Scene* m_scene;
 
 	// --- SHADER ---
+	//// Shadows
+	//aie::ShaderProgram	m_useShadowProgram;
+	////
 	aie::ShaderProgram	m_simpleShader;
 	aie::ShaderProgram	m_bunnyShader;
 	aie::ShaderProgram	m_dragonShader;
