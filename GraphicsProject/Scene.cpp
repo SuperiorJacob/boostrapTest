@@ -10,6 +10,7 @@
 Scene::Scene(Camera* a_camera, glm::vec2 a_windowSize, Light& a_light, glm::vec3 a_ambientLight)
 	: m_camera(a_camera), m_windowSize(a_windowSize), m_light(a_light), m_ambientLight(a_ambientLight)
 {
+
 }
 
 Scene::~Scene()
@@ -42,27 +43,62 @@ void Scene::IMGUI_Logic()
 {
 	ImGui::Begin("Objects");
 
-	for (auto i = m_instances.begin(); i != m_instances.end(); i++)
+	int c = 0;
+
+	if (ImGui::CollapsingHeader("Game Objects"))
 	{
-		Instance* instance = *i;
-		instance->Draw(this);
-
-		if (ImGui::CollapsingHeader(instance->m_name))
+		ImGui::Indent();
+		for (auto i = m_instances.begin(); i != m_instances.end(); i++)
 		{
-			glm::quat rotation;
-			glm::vec3 position, skew, scale;
-			glm::vec4 perspective;
-			glm::decompose(instance->GetTransform(), scale, rotation, position, skew, perspective);
+			c++;
+			Instance* instance = *i;
+			instance->Draw(this);
 
-			//ImGui::InputText("Name", instance->m_name, std::strlen(instance->m_name));
+			ImGui::PushID(c);
+			if (ImGui::CollapsingHeader(instance->m_name))
+			{
+				glm::quat rotation;
+				glm::vec3 position, skew, scale;
+				glm::vec4 perspective;
+				glm::decompose(instance->GetTransform(), scale, rotation, position, skew, perspective);
 
-			ImGui::DragFloat3("Position", &position[0], 0.1f);
-			ImGui::DragFloat3("Rotation", &instance->m_rotation[0], 0.1f);
-			ImGui::DragFloat3("Scale", &scale[0], 0.1f);
+				//ImGui::InputText("Name", instance->m_name, std::strlen(instance->m_name));
 
-			instance->SetTransform(instance->MakeTransform(position, instance->m_rotation, scale));
+				ImGui::DragFloat3("Position", &position[0], 0.1f);
+				ImGui::DragFloat3("Rotation", &instance->m_rotation[0], 0.1f);
+				ImGui::DragFloat3("Scale", &scale[0], 0.1f);
+
+				instance->SetTransform(instance->MakeTransform(position, instance->m_rotation, scale));
+			}
+			ImGui::PopID();
 		}
+
+		ImGui::Unindent();
 	}
 
+	if (ImGui::CollapsingHeader("Lights"))
+	{
+		ImGui::Indent();
+		for (int i = 0; i < m_pointLights.size(); i++)
+		{
+			c++;
+			Light light = m_pointLights[i];
+
+			ImGui::PushID(c);
+			if (ImGui::CollapsingHeader("Light"))
+			{
+				ImGui::DragFloat3("Position", &light.m_direction[0], 0.1f);
+				ImGui::DragFloat3("Colour", &light.m_untouchedColor[0], 0.1f, 0, 1);
+				ImGui::DragFloat("Scale", &light.m_intensity, 0.1f, 0);
+
+				light.m_color = light.m_untouchedColor * light.m_intensity;
+			}
+
+			m_pointLights[i] = light;
+
+			ImGui::PopID();
+		}
+		ImGui::Unindent();
+	}
 	ImGui::End();
 }

@@ -15,15 +15,21 @@ public:
 	{
 		m_direction = glm::vec3(1);
 		m_color = glm::vec3(1);
+		m_untouchedColor = m_color;
+		m_intensity = 1;
 	}
 	Light(glm::vec3 a_pos, glm::vec3 a_color, float a_intensity) 
 	{
 		m_direction = a_pos;
+		m_untouchedColor = a_color;
+		m_intensity = a_intensity;
 		m_color = a_color * a_intensity;
 	}
 
 	glm::vec3 m_direction;
 	glm::vec3 m_color;
+	glm::vec3 m_untouchedColor;
+	float m_intensity;
 
 };
 

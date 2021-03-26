@@ -70,6 +70,17 @@ void GraphicsProjectApp::update(float deltaTime)
 	// add a transform so that we can see the axis
 	Gizmos::addTransform(mat4(1));
 
+	for (int i = 0; i < MAX_LIGHTS && i < m_scene->GetPointLights().size(); i++)
+	{
+		Light pointLight = m_scene->GetPointLights()[i];
+		glm::vec3 pos = pointLight.m_direction;
+		glm::vec3 colour = pointLight.m_untouchedColor;
+
+		float radius = pointLight.m_intensity;
+
+		Gizmos::addSphere(pos, radius, 16, 16, glm::vec4(colour.x, colour.y, colour.z, 1));
+	}
+
 	m_camera.Update(deltaTime);
 
 	IMGUI_Logic();
