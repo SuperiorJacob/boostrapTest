@@ -23,7 +23,10 @@ public:
 	void SetTransform(glm::mat4 a_transform) { m_transform = a_transform; }
 	static glm::mat4 MakeTransform(glm::vec3 a_position, glm::vec3 a_eulerAngles, glm::vec3 a_scale);
 
-	char* m_name = "Game Object";
+	void SetName(char* a_name) { strcpy(m_name, a_name); strcpy(m_actualName, a_name); }
+
+	char m_name[32];
+	char m_actualName[32];
 	glm::vec3				m_rotation;
 
 protected:

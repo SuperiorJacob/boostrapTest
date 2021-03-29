@@ -17,6 +17,8 @@ public:
 		m_color = glm::vec3(1);
 		m_untouchedColor = m_color;
 		m_intensity = 1;
+
+		SetName("Light");
 	}
 	Light(glm::vec3 a_pos, glm::vec3 a_color, float a_intensity) 
 	{
@@ -24,7 +26,14 @@ public:
 		m_untouchedColor = a_color;
 		m_intensity = a_intensity;
 		m_color = a_color * a_intensity;
+
+		SetName("Light");
 	}
+
+	void SetName(char* a_name) { strcpy(m_name, a_name); strcpy(m_actualName, a_name); }
+
+	char m_name[32];
+	char m_actualName[32];
 
 	glm::vec3 m_direction;
 	glm::vec3 m_color;

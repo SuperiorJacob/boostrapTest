@@ -189,17 +189,6 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
 #pragma endregion
 
 #pragma region FlatBunny
-	m_bunnyShader.loadShader(aie::eShaderStage::VERTEX, "./shaders/simple.vert");
-
-	// Load the fragment shader from a file
-	m_bunnyShader.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/simple.frag");
-
-	if (!m_bunnyShader.link())
-	{
-		printf("Bunny Shader had an error: %s\n", m_bunnyShader.getLastError());
-		return false;
-	}
-
 	if (m_bunny.load("./stanford/bunny.obj") == false)
 	{
 		printf("Bunny Mesh Failed!\n");
@@ -209,17 +198,6 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
 #pragma endregion
 
 #pragma region Dragon
-	m_dragonShader.loadShader(aie::eShaderStage::VERTEX, "./shaders/simple.vert");
-
-	// Load the fragment shader from a file
-	m_dragonShader.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/simple.frag");
-
-	if (!m_dragonShader.link())
-	{
-		printf("Dragon Shader had an error: %s\n", m_dragonShader.getLastError());
-		return false;
-	}
-
 	if (m_dragon.load("./stanford/dragon.obj") == false)
 	{
 		printf("Dragon Mesh Failed!\n");
@@ -256,13 +234,13 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
 
 	if (!m_lucyShader.link())
 	{
-		printf("Buddha Shader had an error: %s\n", m_lucyShader.getLastError());
+		printf("Lucy Shader had an error: %s\n", m_lucyShader.getLastError());
 		return false;
 	}
 
 	if (m_lucy.load("./stanford/lucy.obj") == false)
 	{
-		printf("Dragon Mesh Failed!\n");
+		printf("Lucy Mesh Failed!\n");
 		return false;
 	}
 
@@ -340,24 +318,16 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
 
 	// Yes horrific
 	Instance* inst = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_spear, &m_normalMapShader);
-	inst->m_name = "Spear";
+	inst->SetName("Spear");
 	m_scene->AddInstance(inst);
 
-	//Instance* inst1 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_bunny, &m_bunnyShader);
-	//inst1->m_name = "Bunny";
-	//m_scene->AddInstance(inst1);
+	Instance* inst1 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_barrel, &m_normalMapShader);
+	inst1->SetName("Barrel");
+	m_scene->AddInstance(inst1);
 
-	//Instance* inst2 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_dragon, &m_dragonShader);
-	//inst2->m_name = "Dragon";
-	//m_scene->AddInstance(inst2);
-
-	//Instance* inst3 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_lucy, &m_lucyShader);
-	//inst3->m_name = "Lucy";
-	//m_scene->AddInstance(inst3);
-
-	Instance* inst4 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_barrel, &m_normalMapShader);
-	inst4->m_name = "Barrel";
-	m_scene->AddInstance(inst4);
+	Instance* inst2 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0.5f), &m_dragon, &m_phongShader);
+	inst2->SetName("Dragon");
+	m_scene->AddInstance(inst2);
 	//
 
 	// Add a red light on the left side

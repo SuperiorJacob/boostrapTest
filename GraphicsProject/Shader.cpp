@@ -117,15 +117,15 @@ bool ShaderProgram::link() {
 
 	int success = GL_TRUE;
 	glGetProgramiv(m_program, GL_LINK_STATUS, &success);
-	if (success == GL_FALSE) {
-		int infoLogLength = 0;
-		glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &infoLogLength);
+	//if (success == GL_FALSE) {
+	//	int infoLogLength = 0;
+	//	glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		delete[] m_lastError;
-		m_lastError = new char[infoLogLength + 1];
-		glGetProgramInfoLog(m_program, infoLogLength, 0, m_lastError);
-		return false;
-	}
+	//	delete[] m_lastError;
+	//	m_lastError = new char[infoLogLength + 1];
+	//	glGetProgramInfoLog(m_program, infoLogLength, 0, m_lastError);
+	//	return false;
+	//}
 	return true;
 }
 

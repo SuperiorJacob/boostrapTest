@@ -55,18 +55,22 @@ void Scene::IMGUI_Logic()
 			instance->Draw(this);
 
 			ImGui::PushID(c);
-			if (ImGui::CollapsingHeader(instance->m_name))
+			if (ImGui::CollapsingHeader(instance->m_actualName))
 			{
 				glm::quat rotation;
 				glm::vec3 position, skew, scale;
 				glm::vec4 perspective;
 				glm::decompose(instance->GetTransform(), scale, rotation, position, skew, perspective);
 
-				//ImGui::InputText("Name", instance->m_name, std::strlen(instance->m_name));
+				ImGui::InputText("Name", instance->m_name, 32);
+				if (ImGui::Button("Update Name", { 150,20 }))
+				{
+					strcpy(instance->m_actualName, instance->m_name);
+				}
 
 				ImGui::DragFloat3("Position", &position[0], 0.1f);
 				ImGui::DragFloat3("Rotation", &instance->m_rotation[0], 0.1f);
-				ImGui::DragFloat3("Scale", &scale[0], 0.1f);
+				ImGui::DragFloat3("Scale", &scale[0], 0.1f, 0.01f);
 
 				instance->SetTransform(instance->MakeTransform(position, instance->m_rotation, scale));
 			}
@@ -85,8 +89,14 @@ void Scene::IMGUI_Logic()
 			Light light = m_pointLights[i];
 
 			ImGui::PushID(c);
-			if (ImGui::CollapsingHeader("Light"))
+			if (ImGui::CollapsingHeader(light.m_actualName))
 			{
+				ImGui::InputText("Name", light.m_name, 32);
+				if (ImGui::Button("Update Name", { 150,20 }))
+				{
+					strcpy(light.m_actualName, light.m_name);
+				}
+
 				ImGui::DragFloat3("Position", &light.m_direction[0], 0.1f);
 				ImGui::DragFloat3("Colour", &light.m_untouchedColor[0], 0.1f, 0, 1);
 				ImGui::DragFloat("Scale", &light.m_intensity, 0.1f, 0);
