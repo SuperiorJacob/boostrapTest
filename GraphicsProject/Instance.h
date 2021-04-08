@@ -1,3 +1,16 @@
+/*
+
+* File:			Instance.h
+* Author:		Jacob Cooper (s200503@students.aie.edu.au)
+
+* Edit Dates:
+*	First:		18/03/2021
+*	Last:		8/04/2021
+
+* Summary:
+*	This class is built to store, draw and manipulate object data; eg. mesh, transform, shaders, name, etc.
+*/
+
 #pragma once
 #include <glm/glm.hpp>
 

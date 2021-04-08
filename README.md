@@ -1,61 +1,44 @@
-# aieBootstrap
+## Table of contents
+* [General info](#general-info)
+* [Technologies](#technologies)
+* [Graphics Usage](#graphics-usage)
 
-*NOTE: This project is no longer being actively maintained*
+## General info
+Author: Jacob Cooper (s200503@students.aie.edu.au)
 
-The base project code used for the Advanced Diploma of Professional Game Development to aid in graphical real-time applications.
+School: Academy of Interactive Entertainment (AIE)
 
-Bootstrap is a static library that can be linked against to implement real-time graphical applications with OpenGL as the base API.
-
-To build and run projects ensure that Bootstrap is the first project built, and ensure you have set the Working Directory to the bin folder, i.e. <b>"$(SolutionDir)bin\"</b>.
-
-Provided is VS2015 project templates that can create a basic 2D project, and another for a 3D project. These are within the Tools sub-folder as .zip files. Add these to your Visual Studio Project Template directory, i.e <b>"C:/Users/<i>username</i>/Documents/Visual Studio 2015/Templates/ProjectTemplates/Visual C++ Project/"</b>.
-
-Alternatively, to create an application simply derive from the ```aie::Application``` class like so:
-```c++
-class MyApplication : public aie::Application {
-public:
-
-	MyApplication();
-	virtual ~MyApplication();
-
-	virtual bool startup();
-	virtual void shutdown();
-
-	virtual void update(float deltaTime);
-	virtual void draw();
-
-};
-```
-Then implement a ```main()``` function to create an instance of your application:
-```c++
-int main() {
+This project includes two bootstrap assessments:
+* Physics for Games project of pachinko (``/PhysicsProject``)
+* 3D OpenGL Application (``/GraphicsProject``)
 	
-	auto app = new MyApplication();
-	// window title, dimensions and if it is fullscreen
-	app->run("AIE", 1280, 720, false);
-	delete app;
+## Technologies
+Project is created with:
+* Bootstrap
+* ImGui
+* C++
+* Visual Studio
+	
+## Graphics Usage
+#### Application
+Graphics Project usage, to compile open ``../Bootstrap.sln`` and select your desired compile type ``Release/Debug`` and ``x32/x64 bit``, right click the project and click rebuild. It should compile to bin or ``temp/desired output``. 
 
-	return 0;
-}
-```
-The ```run()``` method implements a game loop that executes in the following manner:
-```
-  if startup() is true then
-    while quit is false
-      update()
-      draw()
-  shutdown()
-```
+To run the program just double click the provided release .exe, and to run it in debug open the .sln and click run.
+#### Operation
+Operation of the project in runtime can be found here.
 
-# Tutorial Videos
+There are four cameras (which can be switched between by pressing tab):
+* Flyby (controlled using WASD for 4 dimensional movement, and the mouse to turn the camera.
+* 3 Stationary Cameras (look directly at a position can not be controlled).
 
-<b>Creating your Git Repo using aieBootstrap</b>
+ImGui editor to manipulate the scene:
 
-[![Video: Creating your Git Repo using aieBootstrap](https://i.vimeocdn.com/video/629137423.webp?mw=600&amp;mh=450)](https://vimeo.com/213005085/3609374652)
-
-
-
-<b>Getting Started with aieBootstrap</b>
-
-[![Video: Getting Started with aieBootstrap](https://i.vimeocdn.com/video/629873947.webp?mw=600&amp;mh=450)](https://vimeo.com/213607377/77c8867175)
-
+| Category | Name | Description |
+| --- | --- | --- |
+| Settings |
+| Settings | Sunlight Direction | Using a Vector3 slider, manipulate the direction the light faces.
+| Settings | Sunlight Color | Using a Vector3 slider, manipulate the suns color.
+| Settings | Enable Distort Post-processing | Enable/Disable to use distorted post processing.
+| Objects |
+| Objects/Game Objects | Every visible mesh object in the scene. | Drop the category, you can manipulate the position, rotation and size of the object.
+| Objects/Lights | All lights in the scene | Can manipulate the position, color and the intensity (effect radius) of the lights.

@@ -117,6 +117,43 @@ void Mesh::Initialise(unsigned int a_vertexCount, const Vertex* a_vertices, unsi
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void Mesh::InitialiseFullscreenQuad()
+{
+	assert(vao == 0);
+	// generate buffers
+	glGenBuffers(1, &vbo);
+	glGenVertexArrays(1, &vao);
+
+	// bind vertex array aka a mesh wrapper
+	glBindVertexArray(vao);
+
+	// bind vertex buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	// define vertices
+	float vertices[] = {
+		-1,1, // left top
+		-1,-1, // left bottom
+		1,1, // right top
+		-1,-1, // left bottom
+		1,-1, // right bottom
+		1, 1 // right top
+	};
+	
+	// fill vertex buffer
+	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertices,GL_STATIC_DRAW);
+	
+	// enable first element as position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8, 0);
+	
+	// unbind buffers
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	// quad has 2 triangles
+	triCount = 2;
+}
+
 void Mesh::Draw()
 {
 	glBindVertexArray(vao);

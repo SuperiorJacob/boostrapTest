@@ -7,10 +7,20 @@ Camera::Camera()
 	m_position = glm::vec3(-10, 2, 0);
 	m_phi = 0;
 	m_theta = 0;
+	m_isFlybyCam = false;
 }
+
+Camera::Camera(glm::vec3 a_position, float a_xRot, float a_yRot, bool a_isFlybyCam)
+	: m_position(a_position), m_theta(a_xRot), m_phi(a_yRot), m_isFlybyCam(a_isFlybyCam)
+{}
 
 void Camera::Update(float a_deltaTime)
 {
+	if (!m_isFlybyCam)
+	{
+		return;
+	}
+
 	aie::Input* input = aie::Input::getInstance();
 	float thetaR = glm::radians(m_theta);
 	float phiR = glm::radians(m_phi);

@@ -1,3 +1,18 @@
+/*
+
+* File:			Scene.h
+* Author:		Jacob Cooper (s200503@students.aie.edu.au)
+
+* Edit Dates:
+*	First:		18/03/2021
+*	Last:		8/04/2021
+
+* Summary:
+*	Ran and instantiated from the GraphicsProjectApp, the scene is used to simulate the graphical functionality
+*	of lights, objects and shaders.
+
+*/
+
 #pragma once
 #include <list>
 #include <vector>
@@ -18,7 +33,7 @@ public:
 		m_untouchedColor = m_color;
 		m_intensity = 1;
 
-		SetName("Light");
+		SetName("Point Light");
 	}
 	Light(glm::vec3 a_pos, glm::vec3 a_color, float a_intensity) 
 	{
@@ -27,7 +42,7 @@ public:
 		m_intensity = a_intensity;
 		m_color = a_color * a_intensity;
 
-		SetName("Light");
+		SetName("Point Light");
 	}
 
 	void SetName(char* a_name) { strcpy(m_name, a_name); strcpy(m_actualName, a_name); }
@@ -58,14 +73,21 @@ public:
 	Light& GetLight()					{ return m_light; }
 	glm::vec3 GetAmbientLight()			{ return m_ambientLight; }
 
-	int GetNumLights() { return (int)m_pointLights.size(); }
+	std::vector<Camera*> GetCameras() { return m_cameras; }
+	void AddCamera(Camera* a_camera);
+
+	int GetNumLights()					{ return (int)m_pointLights.size(); }
 	glm::vec3* GetPointLightPositions() { return &m_pointLightPositions[0]; }
-	glm::vec3* GetPointLightColors() { return &m_pointLightColors[0]; }
+	glm::vec3* GetPointLightColors()	{ return &m_pointLightColors[0]; }
 
 	std::vector<Light>& GetPointLights() { return m_pointLights; }
 
+	void SetCamera(Camera* a_camera)	{ m_camera = a_camera; }
+
 protected:
 	Camera*					m_camera;
+	std::vector<Camera*>	m_cameras;
+
 	glm::vec2				m_windowSize;
 	Light					m_light;
 	Light					m_sunLight;

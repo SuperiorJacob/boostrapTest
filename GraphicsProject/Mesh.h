@@ -1,3 +1,14 @@
+/*
+
+* File:			Mesh.h
+* Author:		Jacob Cooper (s200503@students.aie.edu.au)
+
+* Edit Dates:
+*	First:		12/03/2021
+*	Last:		8/04/2021
+
+*/
+
 #pragma once
 #include <glm/glm.hpp>
 
@@ -16,6 +27,7 @@ public:
 
 	void InitialiseQuad();
 	void Initialise(unsigned int a_vertexCount, const Vertex* a_vertices, unsigned int a_indexCount = 0, unsigned int* a_indices = nullptr);
+	void InitialiseFullscreenQuad();
 
 	virtual void Draw();
 

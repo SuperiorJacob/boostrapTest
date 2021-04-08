@@ -1,3 +1,14 @@
+/*
+
+* File:			OBJMesh.h
+* Author:		Jacob Cooper (s200503@students.aie.edu.au)
+
+* Edit Dates:
+*	First:		12/03/2021
+*	Last:		8/04/2021
+
+*/
+
 #pragma once
 
 #include <glm/vec2.hpp>

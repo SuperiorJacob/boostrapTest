@@ -70,6 +70,10 @@ void GraphicsProjectApp::update(float deltaTime)
 	// add a transform so that we can see the axis
 	Gizmos::addTransform(mat4(1));
 
+	m_scene->SetCamera(m_camera);
+
+	m_camera->Update(deltaTime);
+
 	for (int i = 0; i < MAX_LIGHTS && i < m_scene->GetPointLights().size(); i++)
 	{
 		Light pointLight = m_scene->GetPointLights()[i];
@@ -81,8 +85,6 @@ void GraphicsProjectApp::update(float deltaTime)
 		Gizmos::addSphere(pos, radius, 16, 16, glm::vec4(colour.x, colour.y, colour.z, 1));
 	}
 
-	m_camera.Update(deltaTime);
-
 	IMGUI_Logic();
 
 	//SolarSystem(deltaTime);
@@ -92,18 +94,34 @@ void GraphicsProjectApp::update(float deltaTime)
 
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
+
+	if (input->wasKeyPressed(aie::INPUT_KEY_TAB))
+	{
+		m_cameraID++;
+
+		if (m_cameraID > 3)
+		{
+			m_cameraID = 0;
+		}
+
+		m_camera = m_scene->GetCameras().at(m_cameraID);
+	}
+
 }
 
 void GraphicsProjectApp::draw()
 {
+	if (EnablePostProcessing)
+	{
+		// Bind the render target
+		m_renderTarget.bind();
+	}
+
 	// wipe the screen to the background colour
 	clearScreen();
 	
-	glm::mat4 projectionMatrix = m_camera.GetProjectionMatrix(getWindowWidth(), (float)getWindowHeight());
-	glm::mat4 viewMatrix = m_camera.GetViewMatrix();
-
-	// update perspective based on screen size
-	//m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f, getWindowWidth() / (float)getWindowHeight(), 0.1f, 1000.0f);
+	glm::mat4 projectionMatrix = m_camera->GetProjectionMatrix(getWindowWidth(), (float)getWindowHeight());
+	glm::mat4 viewMatrix = m_camera->GetViewMatrix();
 
 #pragma region Quad
 	auto pvm = projectionMatrix * viewMatrix * m_quadTransform;
@@ -120,22 +138,27 @@ void GraphicsProjectApp::draw()
 	// Draw the quad...
 	m_quadMesh.Draw();
 
+#pragma endregion
+	
 	m_scene->Draw();
 
-#pragma endregion
-
 	Gizmos::draw(projectionMatrix * viewMatrix);
-	Gizmos::draw2D((float)getWindowWidth(), (float)getWindowHeight());
-}
+	
+	if (EnablePostProcessing)
+	{
+		// Unbind target to return to backbuffer
+		m_renderTarget.unbind();
 
-void GraphicsProjectApp::SolarSystem(float dt)
-{
-	// Sun
-	Gizmos::addSphere(glm::vec3(0, 0, 0), 1.0f, 16, 16, glm::vec4(1, 0.8, 0, 1));
+		// Clear the backbuffer
+		clearScreen();
 
-	//Mercury
-	/*glm::vec3 mercuryPos = glm::rotate(10.0f, glm::vec3(2, 0, 0));*/
-	Gizmos::addSphere(glm::vec3(2, 0, 0), 0.15f, 16, 16, glm::vec4(1, 0.8, 0, 1));
+		m_postShader.bind();
+		m_postShader.bindUniform("ColorTarget", 0);
+		m_renderTarget.getTarget(0).bind(0);
+
+		// Fullscreen Quad
+		m_fullscreenQuad.Draw();
+	}
 }
 
 bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
@@ -286,6 +309,27 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
 
 #pragma endregion
 
+#pragma region Post Proccessor
+	if (m_renderTarget.initialise(1, (float)getWindowWidth(), (float)getWindowHeight()) == false)
+	{
+		printf("Render Target Error!\n");
+		return false;
+	}
+
+	// Create a fullscreen quad
+	m_fullscreenQuad.InitialiseFullscreenQuad();
+
+	// Load a processing shader
+	m_postShader.loadShader(aie::eShaderStage::VERTEX, "./shaders/post.vert");
+	m_postShader.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/post.frag");
+
+	if (m_postShader.link() == false)
+	{
+		printf("Post Shader has an error: %s\n", m_postShader.getLastError());
+		return false;
+	}
+#pragma endregion
+
 #pragma region GridLogic
 	if (m_gridTexture.load("./textures/numbered_grid.tga") == false)
 	{
@@ -314,19 +358,19 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
 
 #pragma endregion
 
-	m_scene = new Scene(&m_camera, glm::vec2(getWindowWidth(), getWindowHeight()), a_light, glm::vec3(0.25f));
+	m_scene = new Scene(m_camera, glm::vec2(getWindowWidth(), getWindowHeight()), a_light, glm::vec3(0.25f));
 
 	// Yes horrific
 	Instance* inst = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_spear, &m_normalMapShader);
-	inst->SetName("Spear");
+	inst->SetName("Spear - Normal");
 	m_scene->AddInstance(inst);
 
 	Instance* inst1 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1), &m_barrel, &m_normalMapShader);
-	inst1->SetName("Barrel");
+	inst1->SetName("Barrel - Normal");
 	m_scene->AddInstance(inst1);
 
 	Instance* inst2 = new Instance(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0.5f), &m_dragon, &m_phongShader);
-	inst2->SetName("Dragon");
+	inst2->SetName("Dragon - Phong");
 	m_scene->AddInstance(inst2);
 	//
 
@@ -336,192 +380,39 @@ bool GraphicsProjectApp::LoadShaderAndMeshLogic(Light a_light)
 	// Add a green light on the right side
 	m_scene->GetPointLights().push_back(Light(vec3(-5, 3, 0), vec3(0, 1, 0), 50));
 
+#pragma region Cameras
+	// Flyby Cam
+	Camera* m_flybyCam = new Camera(glm::vec3(-10, 2, 0), 0.0f, 0.0f, true);
+	m_scene->AddCamera(m_flybyCam);
+
+	// X-axis Cam
+	Camera* m_xAxisCam = new Camera(glm::vec3(-20, 4, 0), 0.0f, 0.0f, false);
+	m_scene->AddCamera(m_xAxisCam);
+
+	// Y-axis Cam
+	Camera* m_yAxisCam = new Camera(glm::vec3(0, 20, 0), 0.0f, -90.0f, false);
+	m_scene->AddCamera(m_yAxisCam);
+
+	// Z-axis Cam
+	Camera* m_zAxisCam = new Camera(glm::vec3(0, 4, 20), -90.0f, 0.0f, false);
+	m_scene->AddCamera(m_zAxisCam);
+
+	// Default cam is flyby cam
+	m_camera = m_flybyCam;
+
+#pragma endregion Cameras
+
 	return true;
 }
 
-//void GraphicsProjectApp::DrawShaderAndMeshes(glm::mat4 a_projectionMatrix, glm::mat4 a_viewMatrix)
-//{
-//	// PVM = Projection View Matrix
-//	auto pvm = a_projectionMatrix * a_viewMatrix * glm::mat4(0);
-//
-//#pragma region Quad
-//	// Bind the shader
-//	m_textureShader.bind();
-//
-//	// Bind the transform of the mesh
-//	pvm = a_projectionMatrix * a_viewMatrix * m_quadTransform;
-//	m_textureShader.bindUniform("ProjectionViewModel", pvm);
-//
-//	// Bind the texture to a location of your choice (0)
-//	m_textureShader.bindUniform("diffuseTexture", 0);
-//
-//	// Bind the texture to the specificed location
-//	m_gridTexture.bind(0);
-//
-//	// Draw the quad...
-//	m_quadMesh.Draw();
-//
-//#pragma endregion
-//
-//#pragma region FlatBunny
-//	//m_bunnyShader.bind();
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_bunny.transform;
-//	//m_bunnyShader.bindUniform("ProjectionViewModel", pvm);
-//	//m_bunnyShader.bindUniform("MeshFlatColor", glm::vec4(0, 1, 0, 1));
-//
-//	// Draw bunny mesh
-//	// m_bunny.mesh.draw();
-//
-//#pragma endregion
-//
-//#pragma region Dragon
-//	//m_dragonShader.bind();
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_dragon.transform;
-//	//m_dragonShader.bindUniform("ProjectionViewModel", pvm);
-//	//m_dragonShader.bindUniform("MeshFlatColor", glm::vec4(0, 1, 0, 1));
-//
-//	// Draw dragon mesh
-//	// m_dragon.mesh.draw();
-//
-//#pragma endregion
-//
-//#pragma region Buddha
-//	//m_buddhaShader.bind();
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_buddha.transform;
-//	//m_buddhaShader.bindUniform("ProjectionViewModel", pvm);
-//	//m_buddhaShader.bindUniform("MeshFlatColor", glm::vec4(1, 0, 1, 1));
-//
-//	// Draw buddha mesh
-//	// m_buddha.mesh.draw();
-//
-//#pragma endregion
-//
-//#pragma region Lucy
-//	//m_lucyShader.bind();
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_lucy.transform;
-//	//m_lucyShader.bindUniform("ProjectionViewModel", pvm);
-//	//m_lucyShader.bindUniform("MeshFlatColor", glm::vec4(0, 1, 1, 1));
-//
-//	// Draw lucy mesh
-//	// m_lucy.mesh.draw();
-//
-//#pragma endregion
-//
-//#pragma region Phong
-//	//// Bind the shader
-//	//m_phongShader.bind();
-//
-//	//// Bind the camera position
-//	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(a_viewMatrix)[3]));
-//
-//	//// Bind the light
-//	//m_phongShader.bindUniform("AmbientColor", m_ambientLight);
-//	//m_phongShader.bindUniform("LightColor", m_light.color);
-//	//m_phongShader.bindUniform("LightDirection", m_light.direction);
-//
-//	//// --- BUNNY ---
-//	//// Bind the PVM
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_bunny.transform;
-//	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-//
-//	//// Bind the lighting transforms
-//	//m_phongShader.bindUniform("ModelMatrix", m_bunny.transform);
-//
-//	//// Draw mesh
-//	//m_bunny.mesh.draw();
-//
-//	//// --- DRAGON ---
-//	//// Bind the PVM
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_dragon.transform;
-//	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-//
-//	//// Bind the lighting transforms
-//	//m_phongShader.bindUniform("ModelMatrix", m_dragon.transform);
-//
-//	//// Draw mesh
-//	//m_dragon.mesh.draw();
-//
-//	//// --- BUDDHA ---
-// //   // Bind the PVM
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_buddha.transform;
-//	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-//
-//	//// Bind the lighting transforms
-//	//m_phongShader.bindUniform("ModelMatrix", m_buddha.transform);
-//
-//	//// Draw mesh
-//	//m_buddha.mesh.draw();
-//
-//	//// --- LUCY ---
-// //   // Bind the PVM
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_lucy.transform;
-//	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-//
-//	//// Bind the lighting transforms
-//	//m_phongShader.bindUniform("ModelMatrix", m_lucy.transform);
-//
-//	//// Draw mesh
-//	//m_lucy.mesh.draw();
-//
-//#pragma endregion
-//
-//#pragma region Soulspear
-//	m_normalMapShader.bind();
-//
-//	// Bind the transform
-//	pvm = a_projectionMatrix * a_viewMatrix * m_spear.transform;
-//	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
-//	m_normalMapShader.bindUniform("CameraPosition", m_camera.GetPosition());
-//	m_normalMapShader.bindUniform("AmbientColor", m_ambientLight);
-//	m_normalMapShader.bindUniform("LightColor", m_light.color);
-//	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
-//	m_normalMapShader.bindUniform("ModelMatrix", m_spear.transform);
-//
-//	// Draw the mesh
-//	m_spear.mesh.draw();
-//#pragma endregion
-//
-//#pragma region Knife
-//	//m_normalMapShader.bind();
-//
-//	//// Bind the transform
-//	//pvm = a_projectionMatrix * a_viewMatrix * m_barrel.transform;
-//	//m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
-//	//m_normalMapShader.bindUniform("CameraPosition", m_camera.GetPosition());
-//	//m_normalMapShader.bindUniform("AmbientColor", m_ambientLight);
-//	//m_normalMapShader.bindUniform("LightColor", m_light.color);
-//	//m_normalMapShader.bindUniform("LightDirection", m_light.direction);
-//	//m_normalMapShader.bindUniform("ModelMatrix", m_barrel.transform);
-//
-//	//// Draw the mesh
-//	//m_barrel.mesh.draw();
-//#pragma endregion
-//
-//#pragma region LoadAll
-//	//for (auto& obj : m_objectList) 
-//	//{
-//	//	m_normalMapShader.bind();
-//
-//	//	pvm = a_projectionMatrix * a_viewMatrix * obj->transform;
-//	//	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
-//	//	m_normalMapShader.bindUniform("CameraPosition", m_camera.GetPosition());
-//	//	m_normalMapShader.bindUniform("AmbientColor", m_ambientLight);
-//	//	m_normalMapShader.bindUniform("LightColor", m_light.color);
-//	//	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
-//	//	m_normalMapShader.bindUniform("ModelMatrix", obj->transform);
-//
-//	//	obj->mesh.draw();
-//	//}
-//
-//#pragma endregion
-//
-//}
-
 void GraphicsProjectApp::IMGUI_Logic()
 {
-	ImGui::Begin("Scene Light Settings");
+	ImGui::Begin("Settings");
 	ImGui::DragFloat3("Sunlight Direction", &m_scene->GetLight().m_direction[0], 0.1f, -1.0f, 1.0f);
 	ImGui::ColorEdit3("Sunlight Color", &m_scene->GetLight().m_color[0]);
+
+	ImGui::Checkbox("Enable Distort Post-processing", &EnablePostProcessing);
+
 	ImGui::End();
 
 	m_scene->IMGUI_Logic();

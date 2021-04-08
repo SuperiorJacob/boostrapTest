@@ -1,9 +1,25 @@
+/*
+
+* File:			GraphicsProjectApp.h
+* Author:		Jacob Cooper (s200503@students.aie.edu.au)
+
+* Edit Dates:
+*	First:		12/03/2021
+*	Last:		8/04/2021
+
+* Summary:
+*	Main bootstrap graphics project application, used to run and process the entire game whilst also
+*	storing core member variables used throughout the project like mesh, rendertarget, shader and camera data.
+
+*/
+
 #pragma once
 
 #include "Application.h"
 #include "Camera.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "RenderTarget.h"
 
 #include "Scene.h"
 #include "Instance.h"
@@ -24,10 +40,11 @@ public:
 	virtual void update(float deltaTime);
 	virtual void draw();
 
-	void SolarSystem(float dt);
+	bool EnablePostProcessing = false;
 
 protected:
-	Camera m_camera;
+	Camera* m_camera;
+	int m_cameraID = 0;
 
 	// Camera transforms
 	glm::mat4	m_viewMatrix;
@@ -38,9 +55,6 @@ protected:
 	Scene* m_scene;
 
 	// --- SHADER ---
-	//// Shadows
-	//aie::ShaderProgram	m_useShadowProgram;
-	////
 	aie::ShaderProgram	m_simpleShader;
 	aie::ShaderProgram	m_bunnyShader;
 	aie::ShaderProgram	m_dragonShader;
@@ -49,10 +63,13 @@ protected:
 	aie::ShaderProgram	m_phongShader;
 	aie::ShaderProgram	m_textureShader;
 	aie::ShaderProgram	m_normalMapShader;
+	aie::ShaderProgram	m_postShader;
 	// --------------
 	// Basic Plane
 	Mesh			m_quadMesh;
 	glm::mat4		m_quadTransform;
+
+	Mesh m_fullscreenQuad;
 
 	aie::OBJMesh m_bunny;
 	aie::OBJMesh m_dragon;
@@ -61,14 +78,7 @@ protected:
 	aie::OBJMesh m_spear;
 	aie::OBJMesh m_barrel;
 
-	//struct Light
-	//{
-	//	glm::vec3 direction;
-	//	glm::vec3 color;
-	//};
-
-	//Light m_light;
-	//glm::vec3 m_ambientLight;
+	aie::RenderTarget m_renderTarget;
 
 public:
 	bool LoadShaderAndMeshLogic(Light a_light);

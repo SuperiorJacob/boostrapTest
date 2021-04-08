@@ -112,3 +112,8 @@ void Scene::IMGUI_Logic()
 	}
 	ImGui::End();
 }
+
+void Scene::AddCamera(Camera* a_camera)
+{
+	m_cameras.push_back(a_camera);
+}
